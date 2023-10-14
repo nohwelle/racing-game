@@ -13,6 +13,7 @@ public class LevelGenerator : MonoBehaviour
     public float prefabHeightVariation;
     public string targetType = "Teleporter"; // Class of the object you want to find
 
+    List<GameObject> allRooms = new List<GameObject>();
     List<GameObject> allTeleporters = new List<GameObject>();
     float prefabGenerationBuffer = 3;
     float roomsGenerated;
@@ -27,8 +28,16 @@ public class LevelGenerator : MonoBehaviour
         for (var i = 0; i < prefabGenerationBuffer; i++)
         {
             // create first room at prefab gen position
-            Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + (prefabHeightVariation * i)), Quaternion.identity);
+            allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + (prefabHeightVariation * i)), Quaternion.identity));
             roomsGenerated++;
+        }
+
+        // sort objects by creation time
+        allRooms.Sort((obj1, obj2) => obj2.GetInstanceID() - obj1.GetInstanceID());
+
+        for (var i = 0; i < allRooms.Count; i++)
+        {
+            allRooms[i].name = "Room " + i;
         }
 
         GetExistingTeleporters();
@@ -69,8 +78,17 @@ public class LevelGenerator : MonoBehaviour
         // generate new rooms above old ones - y position of room gen based on num of rooms player has completed
         if (roomsGenerated - prefabGenerationBuffer + 1 != player.roomsCompleted + 1 && roomPrefabs.Count != 0)
         {
-            Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + prefabHeightVariation * roomsGenerated), Quaternion.identity);
+            allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + prefabHeightVariation * roomsGenerated), Quaternion.identity));
             roomsGenerated++;
+
+            // sort objects by creation time
+            allRooms.Sort((obj1, obj2) => obj2.GetInstanceID() - obj1.GetInstanceID());
+
+            for (var i = 0; i < allRooms.Count; i++)
+            {
+                allRooms[i].name = "Room " + i;
+            }
+
             GetExistingTeleporters();
         }
     }

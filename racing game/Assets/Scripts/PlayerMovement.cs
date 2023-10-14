@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
     public KeyCode jumpKey;
     public KeyCode crouchKey;
 
-    public float moveSpeed = 3.25f;
+    public float moveSpeed = 16.25f;
+    public float moveSpeedLimit = 3.25f;
+    public float moveFriction = 0.1625f;
     public float jumpSpeed = 4.25f;
     public float slideSpeedFalloff = 0.005f;
     public Vector2 crouchSize;
@@ -60,25 +63,25 @@ public class PlayerMovement : MonoBehaviour
         GroundCheck();
 
         // perform jump
-        if (Input.GetKeyDown(jumpKey) && isGrounded && (!isSliding || !isCrouching))
+        if (isGrounded && Input.GetKeyDown(jumpKey) && (!isSliding || !isCrouching))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
         }
 
         // start or end crouch/slide
-        if (Input.GetKey(crouchKey) && isGrounded && rb.velocity.x == 0)
+        if (isGrounded && Input.GetKey(crouchKey) && rb.velocity.x == 0)
         {
             StartCrouching();
         }
-        if (Input.GetKeyUp(crouchKey) && isGrounded)
+        if (isCrouching && Input.GetKeyUp(crouchKey))
         {
             EndCrouching();
         }
-        if (Input.GetKey(crouchKey) && isGrounded && rb.velocity.x != 0)
+        if (isGrounded && Input.GetKey(crouchKey) && rb.velocity.x != 0 && !isCrouching)
         {
             StartSliding();
         }
-        if (Input.GetKeyUp(crouchKey) && isGrounded)
+        if (isSliding && (Input.GetKeyUp(crouchKey) || rb.velocity.x == 0))
         {
             EndSliding();
         }
@@ -89,19 +92,49 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isSliding && !isCrouching)
+        // slow player down if not inputting anything
+        if (horizontalInput == 0)
         {
-            rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+            if (!isSliding)
+            {
+                rb.velocity -= new Vector2(moveFriction * Mathf.Sign(rb.velocity.x), 0);
+            }
+
+            if (rb.velocity.x <= moveFriction && rb.velocity.x >= -moveFriction)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+        }
+
+        if (!isSliding && !isCrouching && horizontalInput != 0)
+        {
+            float lastHorizontalInput = horizontalInput;
+            if (horizontalInput != lastHorizontalInput && Mathf.Abs(horizontalInput) > 0)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+
+            rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
         }
         if (isCrouching)
         {
-            rb.velocity = new Vector2(horizontalInput * moveSpeed / 2, rb.velocity.y);
+            rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
+        }
+
+        // limit speed
+        if (rb.velocity.x > moveSpeedLimit || rb.velocity.x < -moveSpeedLimit)
+        {
+            rb.velocity = new Vector2(moveSpeedLimit * Mathf.Sign(rb.velocity.x), rb.velocity.y);
+        }
+        if (isCrouching && (rb.velocity.x > moveSpeedLimit / 2 || rb.velocity.x < -moveSpeedLimit / 2))
+        {
+            rb.velocity = new Vector2(moveSpeedLimit / 2 * Mathf.Sign(rb.velocity.x), rb.velocity.y);
         }
     }
 
     void FlipDirection()
     {
-        if (isFacingLeft && horizontalInput > 0 || !isFacingLeft && horizontalInput < 0)
+        if (isFacingLeft && rb.velocity.x > 0 || !isFacingLeft && rb.velocity.x < 0)
         {
             isFacingLeft = !isFacingLeft;
             GetComponent<SpriteRenderer>().flipX = !GetComponent<SpriteRenderer>().flipX;
@@ -138,20 +171,9 @@ public class PlayerMovement : MonoBehaviour
     void StartSliding()
     {
         isSliding = true;
-        float lastXVelocity = rb.velocity.x;
-        float lastXDirection = Mathf.Sign(rb.velocity.x);
         horizontalInput = 0;
 
-        if (Mathf.Sign(lastXVelocity) == lastXDirection && Mathf.Sign(lastXVelocity) > 0)
-        {
-            lastXVelocity -= slideSpeedFalloff;
-            rb.velocity = new Vector2(lastXVelocity, rb.velocity.y);
-        }
-        if (Mathf.Sign(lastXVelocity) == lastXDirection && Mathf.Sign(lastXVelocity) < 0)
-        {
-            lastXVelocity += slideSpeedFalloff;
-            rb.velocity = new Vector2(lastXVelocity, rb.velocity.y);
-        }
+        rb.velocity -= new Vector2(slideSpeedFalloff * Mathf.Sign(rb.velocity.x), 0);
 
         playerCollider.size = playerColliderSlidingSize;
         playerCollider.offset = playerColliderSlidingOffset;
@@ -160,7 +182,10 @@ public class PlayerMovement : MonoBehaviour
     void EndSliding()
     {
         isSliding = false;
-        playerCollider.size = playerColliderStandingSize;
-        playerCollider.offset = playerColliderStandingOffset;
+        if (!isCrouching)
+        {
+            playerCollider.size = playerColliderStandingSize;
+            playerCollider.offset = playerColliderStandingOffset;
+        }
     }
 }

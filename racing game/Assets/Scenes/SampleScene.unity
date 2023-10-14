@@ -321,7 +321,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpKey: 119
   crouchKey: 115
-  moveSpeed: 3.25
+  moveSpeed: 16.25
+  moveSpeedLimit: 3.25
+  moveFriction: 0.1625
   jumpSpeed: 4.25
   slideSpeedFalloff: 0.005
   crouchSize: {x: -0.05, y: -0.2125}
