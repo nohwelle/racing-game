@@ -8,11 +8,13 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode jumpKey;
     public KeyCode crouchKey;
 
-    public float moveSpeed;
-    public float moveSpeedLimit;
-    public float jumpSpeed;
-    public float crouchingHeightPercent = 0.5f;
-    public float crouchingWidthPercent = 1;
+    public float moveSpeed = 3.25f;
+    public float jumpSpeed = 4.25f;
+    public float slideSpeedFalloff = 0.005f;
+    public Vector2 crouchSize;
+    public Vector2 crouchOffset;
+    public Vector2 slideSize;
+    public Vector2 slideOffset;
 
     bool isFacingLeft;
     float horizontalInput;
@@ -29,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
     Vector2 playerColliderStandingOffset;
     Vector2 playerColliderCrouchingSize;
     Vector2 playerColliderCrouchingOffset;
+    Vector2 playerColliderSlidingSize;
+    Vector2 playerColliderSlidingOffset;
 
 
     private void Awake()
@@ -39,8 +43,11 @@ public class PlayerMovement : MonoBehaviour
         playerColliderStandingSize = playerCollider.size;
         playerColliderStandingOffset = playerCollider.offset;
 
-        playerColliderCrouchingSize = new Vector2(playerColliderStandingSize.x * crouchingWidthPercent, playerColliderStandingSize.y * crouchingHeightPercent);
-        playerColliderCrouchingOffset = new Vector2(playerColliderStandingOffset.x * crouchingWidthPercent, playerColliderStandingOffset.y - crouchingHeightPercent / 2);
+        playerColliderCrouchingSize = new Vector2(playerColliderStandingSize.x + crouchSize.x, playerColliderStandingSize.y + crouchSize.y);
+        playerColliderCrouchingOffset = new Vector2(playerColliderStandingOffset.x + crouchOffset.x, playerColliderStandingOffset.y + crouchOffset.y);
+
+        playerColliderSlidingSize = new Vector2(playerColliderStandingSize.x + slideSize.x, playerColliderStandingSize.y + slideSize.y);
+        playerColliderSlidingOffset = new Vector2(playerColliderStandingOffset.x + slideOffset.x, playerColliderStandingOffset.y + slideOffset.y);
     }
 
     // Update is called once per frame
@@ -137,17 +144,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (Mathf.Sign(lastXVelocity) == lastXDirection && Mathf.Sign(lastXVelocity) > 0)
         {
-            lastXVelocity -= 0.01f;
+            lastXVelocity -= slideSpeedFalloff;
             rb.velocity = new Vector2(lastXVelocity, rb.velocity.y);
         }
         if (Mathf.Sign(lastXVelocity) == lastXDirection && Mathf.Sign(lastXVelocity) < 0)
         {
-            lastXVelocity += 0.01f;
+            lastXVelocity += slideSpeedFalloff;
             rb.velocity = new Vector2(lastXVelocity, rb.velocity.y);
         }
 
-        playerCollider.size = playerColliderCrouchingSize;
-        playerCollider.offset = playerColliderCrouchingOffset;
+        playerCollider.size = playerColliderSlidingSize;
+        playerCollider.offset = playerColliderSlidingOffset;
     }
 
     void EndSliding()

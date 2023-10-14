@@ -1,39 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target; // The object you want the camera to follow
-    public float followSpeed = 5.0f; // Speed at which the camera follows the target
-    public float followThreshold = 1.0f; // Distance from the target to trigger camera movement
+    public Transform target;             // The target object
+    public float boundaryY = 2f;         // The boundary in the Y-axis
+    public float cameraAdjustment = 4f; // The amount to adjust the camera's Y position
+    public float smoothingSpeed = 5f;   // The speed of the camera adjustment
 
-    private float initialY; // Initial camera Y position relative to the target
+    Vector3 lastPosition;
 
-    void Start()
+    private void Start()
     {
-        if (target != null)
-        {
-            initialY = transform.position.y - target.position.y;
-        }
+        lastPosition = new(0, transform.position.y - cameraAdjustment, -10);
     }
 
-    void LateUpdate()
+    void Update()
     {
         if (target == null)
         {
+            Debug.LogError("Camera target is not set.");
             return;
         }
 
-        // Calculate the desired Y position of the camera
-        float desiredY = target.position.y + initialY;
-
-        // Check if the target has moved outside the follow threshold
-        if (Mathf.Abs(transform.position.y - desiredY) > followThreshold)
+        // Check if the target's Y position is beyond the boundary
+        if (target.position.y > transform.position.y + boundaryY)
         {
-            // Smoothly move the camera towards the desired Y position
-            float newY = Mathf.Lerp(transform.position.y, desiredY, followSpeed * Time.deltaTime);
-            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+            SetNewLastCameraPosition();
         }
+
+        // Use Vector3.Lerp for smooth camera movement
+        transform.position = Vector3.Lerp(transform.position, new Vector3(lastPosition.x, lastPosition.y + cameraAdjustment, lastPosition.z), smoothingSpeed * Time.deltaTime);
+    }
+
+    void SetNewLastCameraPosition()
+    {
+        lastPosition = transform.position;
     }
 }
