@@ -16,10 +16,13 @@ public class LevelGenerator : MonoBehaviour
     List<GameObject> allRooms = new List<GameObject>();
     List<GameObject> allTeleporters = new List<GameObject>();
     float prefabGenerationBuffer = 3;
-    float roomsGenerated;
+    public float roomsGenerated;
+
+    public static LevelGenerator Instance;
 
     private void Awake()
     {
+        Instance = this;
         player = FindObjectOfType<Player>();
     }
 
@@ -72,11 +75,10 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void GenerateNewRoom(Player playerInFirstPlace)
     {
         // generate new rooms above old ones - y position of room gen based on num of rooms player has completed
-        if (roomsGenerated - prefabGenerationBuffer + 1 != player.roomsCompleted + 1 && roomPrefabs.Count != 0)
+        if (roomsGenerated - prefabGenerationBuffer != player.roomsCompleted && roomPrefabs.Count != 0)
         {
             allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + prefabHeightVariation * roomsGenerated), Quaternion.identity));
             roomsGenerated++;

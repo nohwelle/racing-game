@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool isFacingLeft;
     float horizontalInput;
+    float lastHorizontalInput;
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
@@ -51,12 +52,16 @@ public class PlayerMovement : MonoBehaviour
 
         playerColliderSlidingSize = new Vector2(playerColliderStandingSize.x + slideSize.x, playerColliderStandingSize.y + slideSize.y);
         playerColliderSlidingOffset = new Vector2(playerColliderStandingOffset.x + slideOffset.x, playerColliderStandingOffset.y + slideOffset.y);
+
+        // set value of horizontal input so lastHorizontalInput can be set before next update
+        horizontalInput = Input.GetAxis("Horizontal");
     }
 
     // Update is called once per frame
     void Update()
     {
         // get horizontal input with smoothing
+        lastHorizontalInput = horizontalInput;
         horizontalInput = Input.GetAxis("Horizontal");
 
         // check for ground collision
@@ -92,33 +97,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // mooooove!
+        if (!isSliding && !isCrouching && horizontalInput != 0)
+        {
+            rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
+        }
+        if (isCrouching)
+        {
+            rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
+        }
+
         // slow player down if not inputting anything
-        if (horizontalInput == 0)
+        if (Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
         {
             if (!isSliding)
             {
                 rb.velocity -= new Vector2(moveFriction * Mathf.Sign(rb.velocity.x), 0);
             }
 
+            // stop movement sooner by setting velocity to 0 after it gets lower than moveFriction
             if (rb.velocity.x <= moveFriction && rb.velocity.x >= -moveFriction)
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
             }
-        }
-
-        if (!isSliding && !isCrouching && horizontalInput != 0)
-        {
-            float lastHorizontalInput = horizontalInput;
-            if (horizontalInput != lastHorizontalInput && Mathf.Abs(horizontalInput) > 0)
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-            }
-
-            rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
-        }
-        if (isCrouching)
-        {
-            rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
         }
 
         // limit speed
