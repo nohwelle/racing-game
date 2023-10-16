@@ -7,35 +7,50 @@ public class Player : MonoBehaviour
 {
     public KeyCode resetKey;
     public TMP_Text roomsCompletedText;
+    public TMP_Text currentPlacementText;
 
-    public float roomsCompleted;
+    public Material playerMaterial;
+    public Color playerColor = new(1f, 1f, 1f, 0f);
+    public Color playerOutlineColor = new(0f, 0f, 0f, 0f);
 
-    Vector2 spawnPoint;
+    Racer racer;
 
-    private void Start()
+    private void Awake()
     {
-        spawnPoint = transform.position;
+        racer = GetComponent<Racer>();
+
+        playerMaterial = GetComponent<SpriteRenderer>().material;
+        playerMaterial.SetColor("_Player_Color", playerColor);
+        playerMaterial.SetColor("_Outline_Color", playerOutlineColor);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // DEBUG -- reset player to spawn point
         if (resetKey != KeyCode.None && Input.GetKeyDown(resetKey))
         {
-            transform.position = spawnPoint;
+            transform.position = GameManager.Instance.spawnPoint.transform.position;
         }
 
         // update rooms completed text
-        if (roomsCompletedText && roomsCompletedText.text != (roomsCompleted + 1).ToString())
+        if (roomsCompletedText)
         {
-            if (roomsCompleted + 1 < 10)
+            if (racer.roomsCompleted + 1 < 10)
             {
-                roomsCompletedText.text = "ROOM 0" + (roomsCompleted + 1).ToString();
+                roomsCompletedText.text = "ROOM 0" + (racer.roomsCompleted + 1).ToString();
             }
             else
             {
-                roomsCompletedText.text = "ROOM " + (roomsCompleted + 1).ToString();
+                roomsCompletedText.text = "ROOM " + (racer.roomsCompleted + 1).ToString();
             }
+        }
+
+        // update current placement text
+        // -- FIGURE OUT HOW TO APPEND CORRECT SUFFIX
+        if (currentPlacementText)
+        {
+            currentPlacementText.text = racer.currentPlacement.ToString() + "/" + GameManager.Instance.allRacers.Count.ToString();
         }
     }
 }

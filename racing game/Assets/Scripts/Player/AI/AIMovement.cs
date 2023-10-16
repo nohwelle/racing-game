@@ -4,11 +4,11 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerMovement : MonoBehaviour
+public class AIMovement : MonoBehaviour
 {
-    public KeyCode jumpKey;
-    public KeyCode crouchKey;
+    AI AI;
 
+    public float intelligenceValue = 0.5f;
     public float moveSpeed = 16.25f;
     public float moveSpeedLimit = 3.25f;
     public float moveFriction = 0.1625f;
@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        AI = GetComponent<AI>();
         playerCollider = GetComponent<BoxCollider2D>();
 
         // set player collider sizes for standing & crouching
@@ -52,47 +53,28 @@ public class PlayerMovement : MonoBehaviour
 
         playerColliderSlidingSize = new Vector2(playerColliderStandingSize.x + slideSize.x, playerColliderStandingSize.y + slideSize.y);
         playerColliderSlidingOffset = new Vector2(playerColliderStandingOffset.x + slideOffset.x, playerColliderStandingOffset.y + slideOffset.y);
-
-        // set value of horizontal input so lastHorizontalInput can be set before next update
-        horizontalInput = Input.GetAxis("Horizontal");
     }
 
     // Update is called once per frame
     void Update()
     {
-        // get horizontal input with smoothing
+        // get horizontal input with "smoothing"
         lastHorizontalInput = horizontalInput;
-        horizontalInput = Input.GetAxis("Horizontal");
+        horizontalInput += 0.1f;
+
+        if (horizontalInput > 1 || horizontalInput < -1)
+        {
+            horizontalInput = Mathf.Sign(horizontalInput);
+        }
 
         // check for ground collision
         GroundCheck();
 
-        // perform jump
-        if (isGrounded && Input.GetKeyDown(jumpKey) && (!isSliding || !isCrouching))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-        }
-
-        // start or end crouch/slide
-        if (isGrounded && Input.GetKey(crouchKey) && rb.velocity.x == 0)
-        {
-            StartCrouching();
-        }
-        if (isCrouching && Input.GetKeyUp(crouchKey))
-        {
-            EndCrouching();
-        }
-        if (isGrounded && Input.GetKey(crouchKey) && rb.velocity.x != 0 && !isCrouching)
-        {
-            StartSliding();
-        }
-        if (isSliding && (Input.GetKeyUp(crouchKey) || rb.velocity.x == 0))
-        {
-            EndSliding();
-        }
-
         // check if player should turn around
         FlipDirection();
+
+        // modify intelligence based on current position
+
     }
 
     private void FixedUpdate()
@@ -153,6 +135,56 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Obstacle>())
+        {
+            // if obstacle is above player, crouch/slide under it
+            if (collision.gameObject.transform.position.y - transform.position.y > 0)
+            {
+                if (rb.velocity.x != 0)
+                {
+                    StartSliding();
+                }
+                else
+                {
+                    StartCrouching();
+                }
+            }
+
+            // if obstacle is below player, jump over it
+            if (collision.gameObject.transform.position.y - transform.position.y < 0)
+            {
+                StartCoroutine(Jump());
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Obstacle>())
+        {
+            if (isSliding)
+            {
+                EndSliding();
+            }
+
+            if (isCrouching)
+            {
+                EndCrouching();
+            }
+        }
+    }
+
+    IEnumerator Jump()
+    {
+        yield return new WaitForSeconds(Random.Range(0f, 0f));
+
+        rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+
+        yield break;
     }
 
     void StartCrouching()

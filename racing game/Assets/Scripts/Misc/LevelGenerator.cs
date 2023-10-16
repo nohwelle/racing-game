@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    Player player;
-
     public List<GameObject> roomPrefabs;
 
     public Vector2 prefabGenerationPosition;
@@ -23,7 +21,6 @@ public class LevelGenerator : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        player = FindObjectOfType<Player>();
     }
 
     private void Start()
@@ -75,10 +72,10 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateNewRoom(Player playerInFirstPlace)
+    public void GenerateNewRoom(GameObject player)
     {
         // generate new rooms above old ones - y position of room gen based on num of rooms player has completed
-        if (roomsGenerated - prefabGenerationBuffer != player.roomsCompleted && roomPrefabs.Count != 0)
+        if (roomsGenerated - prefabGenerationBuffer != player.GetComponent<Racer>().roomsCompleted && roomPrefabs.Count != 0)
         {
             allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + prefabHeightVariation * roomsGenerated), Quaternion.identity));
             roomsGenerated++;

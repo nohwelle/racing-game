@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -31,17 +32,29 @@ public class Teleporter : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // teleport player to linked teleporter if there is one, then increment num of rooms completed
-        if (collision.gameObject.GetComponent<Player>() && linkedTeleporter)
+        if ((collision.gameObject.GetComponent<Player>() || collision.gameObject.GetComponent<AI>()) && linkedTeleporter)
         {
             GameObject player = collision.gameObject;
 
-            player.transform.position = new Vector2(linkedTeleporter.transform.position.x + collision.gameObject.GetComponent<Player>().transform.localScale.x, linkedTeleporter.transform.position.y);
-            player.GetComponent<Player>().roomsCompleted++;
-            LevelGenerator.Instance.GenerateNewRoom(collision.gameObject.GetComponent<Player>());
+            // teleport player
+            player.transform.position = new Vector2(linkedTeleporter.transform.position.x + collision.gameObject.transform.localScale.x, linkedTeleporter.transform.position.y);
 
+            // increment rooms completed for real players
+            player.GetComponent<Racer>().roomsCompleted++;
+
+            // generate a new room
+            LevelGenerator.Instance.GenerateNewRoom(player);
+
+            // change background color to color of first entered player
+            // -- EDIT TO MAKE THIS BASED OFF ONLY FIRST ENTERED PLAYER
             if (roomBackground)
             {
-                roomBackground.GetComponent<SpriteRenderer>().color = player.GetComponent<SpriteRenderer>().color;
+                roomBackground.GetComponent<SpriteRenderer>().color = player.GetComponent<SpriteRenderer>().material.GetColor("_Player_Color");
+
+                // fix the alpha
+                Color color = roomBackground.GetComponent<SpriteRenderer>().color;
+                color.a = 1f;
+                roomBackground.GetComponent<SpriteRenderer>().color = color;
             }
         }
     }
