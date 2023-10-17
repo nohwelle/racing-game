@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Sawblade : MonoBehaviour
 {
-    public float rotationSpeed = 0.5f;
+    public float rotationSpeed = 250f;
 
     void Update()
     {
-        transform.Rotate(new Vector3(0, 0, rotationSpeed));
+        transform.Rotate(new Vector3(0, 0, rotationSpeed * Time.deltaTime));
     }
 }

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
     public float numOfAIPlayersToAdd;
 
-    public List<GameObject> allRacers = new();
+    public List<GameObject> allRacers;
 
 
     public static GameManager Instance;
@@ -38,11 +38,6 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        SortPlayerList();
-    }
-
-    void SortPlayerList()
     {
         // sort all racers by progression value
         allRacers.OrderByDescending((obj1) => obj1.GetComponent<Racer>().progressValue);

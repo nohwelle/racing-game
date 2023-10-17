@@ -11,8 +11,8 @@ public class LevelGenerator : MonoBehaviour
     public float prefabHeightVariation;
     public string targetType = "Teleporter"; // Class of the object you want to find
 
-    List<GameObject> allRooms = new List<GameObject>();
-    List<GameObject> allTeleporters = new List<GameObject>();
+    List<GameObject> allRooms = new();
+    List<GameObject> allTeleporters = new();
     float prefabGenerationBuffer = 3;
     public float roomsGenerated;
 

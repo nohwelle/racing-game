@@ -8,7 +8,7 @@ public class AIMovement : MonoBehaviour
 {
     AI AI;
 
-    public float intelligenceValue = 0.5f;
+    public float intelligenceValue;
     public float moveSpeed = 16.25f;
     public float moveSpeedLimit = 3.25f;
     public float moveFriction = 0.1625f;
@@ -43,6 +43,9 @@ public class AIMovement : MonoBehaviour
     {
         AI = GetComponent<AI>();
         playerCollider = GetComponent<BoxCollider2D>();
+
+        // set base intelligence
+        intelligenceValue = Random.Range(0f, 1f);
 
         // set player collider sizes for standing & crouching
         playerColliderStandingSize = playerCollider.size;
@@ -180,7 +183,7 @@ public class AIMovement : MonoBehaviour
 
     IEnumerator Jump()
     {
-        yield return new WaitForSeconds(Random.Range(0f, 0f));
+        //yield return new WaitForSeconds(Random.Range(0f, 0f));
 
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
 
