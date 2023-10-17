@@ -40,6 +40,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // sort all racers by progression value
-        allRacers.OrderByDescending((obj1) => obj1.GetComponent<Racer>().progressValue);
+        allRacers = allRacers.OrderByDescending((obj1) => obj1.GetComponent<Racer>().progressValue).ToList();
     }
 }

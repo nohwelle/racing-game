@@ -10,6 +10,8 @@ public class Teleporter : MonoBehaviour
     public GameObject linkedTeleporter;
     public GameObject roomBackground;
 
+    bool hasGeneratedNewRoom;
+
     private void Start()
     {
         List<Teleporter> allTeleporters = new List<Teleporter>();
@@ -42,12 +44,8 @@ public class Teleporter : MonoBehaviour
             // increment rooms completed for real players
             player.GetComponent<Racer>().roomsCompleted++;
 
-            // generate a new room
-            LevelGenerator.Instance.GenerateNewRoom(player);
-
             // change background color to color of first entered player
-            // -- EDIT TO MAKE THIS BASED OFF ONLY FIRST ENTERED PLAYER
-            if (roomBackground)
+            if (roomBackground && !hasGeneratedNewRoom)
             {
                 roomBackground.GetComponent<SpriteRenderer>().color = player.GetComponent<SpriteRenderer>().material.GetColor("_Player_Color");
 
@@ -55,6 +53,13 @@ public class Teleporter : MonoBehaviour
                 Color color = roomBackground.GetComponent<SpriteRenderer>().color;
                 color.a = 1f;
                 roomBackground.GetComponent<SpriteRenderer>().color = color;
+            }
+
+            // generate a new room
+            if (!hasGeneratedNewRoom)
+            {
+                LevelGenerator.Instance.GenerateNewRoom(player);
+                hasGeneratedNewRoom = true;
             }
         }
     }

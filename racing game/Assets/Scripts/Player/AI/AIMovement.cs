@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
-using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class AIMovement : MonoBehaviour
 {
     AI AI;
 
-    public float intelligenceValue;
+    public float intelligenceValue; // more intelligence value = more stupid
     public float moveSpeed = 16.25f;
     public float moveSpeedLimit = 3.25f;
     public float moveFriction = 0.1625f;
@@ -45,7 +45,7 @@ public class AIMovement : MonoBehaviour
         playerCollider = GetComponent<BoxCollider2D>();
 
         // set base intelligence
-        intelligenceValue = Random.Range(0f, 1f);
+        intelligenceValue = Random.Range(0f, 0.5f);
 
         // set player collider sizes for standing & crouching
         playerColliderStandingSize = playerCollider.size;
@@ -63,7 +63,7 @@ public class AIMovement : MonoBehaviour
     {
         // get horizontal input with "smoothing"
         lastHorizontalInput = horizontalInput;
-        horizontalInput += 0.1f;
+        horizontalInput += 0.01f;
 
         if (horizontalInput > 1 || horizontalInput < -1)
         {
@@ -76,8 +76,33 @@ public class AIMovement : MonoBehaviour
         // check if player should turn around
         FlipDirection();
 
-        // modify intelligence based on current position
+        // modify intelligence based on current position in relation to the player
+        foreach (GameObject racer in GameManager.Instance.allRacers)
+        {
+            if (racer.GetComponent<Player>())
+            {
+                // get stupider when ahead of player -- more stupider if further ahead in general
+                if (GetComponent<Racer>().currentPlacement > racer.GetComponent<Racer>().currentPlacement)
+                {
+                    intelligenceValue -= 0.001f * (GetComponent<Racer>().currentPlacement - racer.GetComponent<Racer>().currentPlacement);
+                }
 
+                // get unstupider when behind player -- less stupider if further behind in general
+                if (GetComponent<Racer>().currentPlacement < racer.GetComponent<Racer>().currentPlacement)
+                {
+                    intelligenceValue += 0.001f * (racer.GetComponent<Racer>().currentPlacement - GetComponent<Racer>().currentPlacement);
+                }
+            }
+        }
+
+        if (intelligenceValue > 0.5f)
+        {
+            intelligenceValue = 0.5f;
+        }
+        if (intelligenceValue < 0)
+        {
+            intelligenceValue = 0;
+        }
     }
 
     private void FixedUpdate()
@@ -149,18 +174,37 @@ public class AIMovement : MonoBehaviour
             {
                 if (rb.velocity.x != 0)
                 {
-                    StartSliding();
+                    StartCoroutine(Think(StartSliding()));
                 }
-                else
+                else if (rb.velocity.x == 0)
                 {
-                    StartCrouching();
+                    StartCoroutine(Think(StartCrouching()));
                 }
             }
 
             // if obstacle is below player, jump over it
             if (collision.gameObject.transform.position.y - transform.position.y < 0)
             {
-                StartCoroutine(Jump());
+                StartCoroutine(Think(Jump()));
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.transform.position.y - transform.position.y > 0)
+        {
+            if (rb.velocity.x == 0)
+            {
+                StartCoroutine(Think(StartCrouching()));
+            }
+        }
+
+        if (collision.gameObject.GetComponent<Obstacle>())
+        {
+            if (isSliding && rb.velocity.x == 0)
+            {
+                EndSliding();
             }
         }
     }
@@ -181,20 +225,36 @@ public class AIMovement : MonoBehaviour
         }
     }
 
+    IEnumerator Think(IEnumerator coroutineName)
+    {
+        // randomly decide to either stop in place or just keep moving
+        if (Random.Range(0, 1) == 1)
+        {
+
+        }
+
+        // enforce delay on actions before executing
+        yield return new WaitForSeconds(Random.Range(intelligenceValue, intelligenceValue + 0.25f));
+
+        StartCoroutine(coroutineName);
+
+        yield break;
+    }
+
     IEnumerator Jump()
     {
-        //yield return new WaitForSeconds(Random.Range(0f, 0f));
-
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
 
         yield break;
     }
 
-    void StartCrouching()
+    IEnumerator StartCrouching()
     {
         isCrouching = true;
         playerCollider.size = playerColliderCrouchingSize;
         playerCollider.offset = playerColliderCrouchingOffset;
+
+        yield return null;
     }
 
     void EndCrouching()
@@ -204,7 +264,7 @@ public class AIMovement : MonoBehaviour
         playerCollider.offset = playerColliderStandingOffset;
     }
 
-    void StartSliding()
+    IEnumerator StartSliding()
     {
         isSliding = true;
         horizontalInput = 0;
@@ -213,6 +273,8 @@ public class AIMovement : MonoBehaviour
 
         playerCollider.size = playerColliderSlidingSize;
         playerCollider.offset = playerColliderSlidingOffset;
+
+        yield return null;
     }
 
     void EndSliding()
