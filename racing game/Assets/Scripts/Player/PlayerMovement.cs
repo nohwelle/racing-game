@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Build;
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
+    Racer racer;
+
     public KeyCode jumpKey;
     public KeyCode crouchKey;
 
@@ -13,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeedLimit = 3.25f;
     public float moveFriction = 0.1625f;
     public float jumpSpeed = 4.25f;
-    public float slideSpeedFalloff = 0.005f;
+    public float slideSpeedFalloff = 0.0075f;
     public Vector2 crouchSize;
     public Vector2 crouchOffset;
     public Vector2 slideSize;
@@ -41,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        racer = GetComponent<Racer>();
         playerCollider = GetComponent<BoxCollider2D>();
 
         // set player collider sizes for standing & crouching
@@ -68,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
         GroundCheck();
 
         // perform jump
-        if (isGrounded && Input.GetKeyDown(jumpKey) && (!isSliding || !isCrouching))
+        if (isGrounded && Input.GetKeyDown(jumpKey))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
         }
@@ -98,17 +102,17 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // mooooove!
-        if (!isSliding && !isCrouching && horizontalInput != 0)
+        if (!racer.isInHitStun && !isSliding && !isCrouching && horizontalInput != 0)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
         }
-        if (isCrouching)
+        if (!racer.isInHitStun && isCrouching)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
         }
 
         // slow player down if not inputting anything
-        if (Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
+        if (!racer.isInHitStun && Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
         {
             if (!isSliding)
             {
@@ -144,8 +148,8 @@ public class PlayerMovement : MonoBehaviour
 
     void GroundCheck()
     {
-        // detect if a groundLayer object is within the 0.1 unit gap between the player's collider size and groundCheck's position
-        if (Physics2D.OverlapBox(groundCheck.position, playerCollider.size, 0, groundLayer))
+        // detect if a groundLayer object is within the gap between the player's collider size and groundCheck's position
+        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * transform.localScale, 0, groundLayer))
         {
             isGrounded = true;
         }
@@ -183,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
     void EndSliding()
     {
         isSliding = false;
+
         if (!isCrouching)
         {
             playerCollider.size = playerColliderStandingSize;

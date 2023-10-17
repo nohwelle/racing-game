@@ -8,11 +8,7 @@ public class Racer : MonoBehaviour
     public float currentPlacement;
     public float progressValue;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    public bool isInHitStun;
 
     // Update is called once per frame
     void Update()
@@ -27,5 +23,16 @@ public class Racer : MonoBehaviour
                 currentPlacement = i + 1;
             }
         }
+    }
+
+    public IEnumerator HitStunCooldown(float hitStunTime)
+    {
+        isInHitStun = true;
+
+        yield return new WaitForSeconds(hitStunTime);
+
+        isInHitStun = false;
+
+        yield break;
     }
 }

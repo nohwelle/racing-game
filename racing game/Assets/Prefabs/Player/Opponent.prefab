@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3588364335971125119}
   - component: {fileID: 8276342268149504969}
-  - component: {fileID: 3960379028708833440}
+  - component: {fileID: -4893396460310565107}
   - component: {fileID: 8584233502941203357}
   - component: {fileID: 5016165278084137493}
   - component: {fileID: 2526929952966008635}
@@ -63,7 +63,7 @@ Transform:
   m_GameObject: {fileID: 6419072449057254216}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9, y: 1, z: 0}
+  m_LocalPosition: {x: -8, y: 1, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -122,7 +122,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &3960379028708833440
+--- !u!61 &-4893396460310565107
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +189,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -209,6 +209,7 @@ MonoBehaviour:
   roomsCompleted: 0
   currentPlacement: 0
   progressValue: 0
+  isInHitStun: 0
 --- !u!114 &2526929952966008635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,18 +253,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intelligenceValue: 0
+  maxIntelligenceValue: 0.5
   moveSpeed: 16.25
   moveSpeedLimit: 3.25
   moveFriction: 0.1625
   jumpSpeed: 4.25
-  slideSpeedFalloff: 0.005
+  slideSpeedFalloff: 0.0075
   crouchSize: {x: -0.05, y: -0.175}
   crouchOffset: {x: 0, y: -0.075}
   slideSize: {x: 0.2, y: -0.375}
   slideOffset: {x: 0, y: -0.18}
+  horizontalInputSmoothing: 0.01625
   isGrounded: 0
   isCrouching: 0
   isSliding: 0
+  isNotRunning: 0
   rb: {fileID: 8584233502941203357}
   groundCheck: {fileID: 3588364335971125119}
   groundLayer:

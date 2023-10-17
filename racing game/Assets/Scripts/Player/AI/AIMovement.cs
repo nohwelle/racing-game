@@ -1,30 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 public class AIMovement : MonoBehaviour
 {
-    AI AI;
+    Racer racer;
 
     public float intelligenceValue; // more intelligence value = more stupid
+    public float maxIntelligenceValue = 0.5f;
     public float moveSpeed = 16.25f;
     public float moveSpeedLimit = 3.25f;
     public float moveFriction = 0.1625f;
     public float jumpSpeed = 4.25f;
-    public float slideSpeedFalloff = 0.005f;
+    public float slideSpeedFalloff = 0.0075f;
     public Vector2 crouchSize;
     public Vector2 crouchOffset;
     public Vector2 slideSize;
     public Vector2 slideOffset;
 
     bool isFacingLeft;
+    public float horizontalInputSmoothing = 0.01625f; // how much to increase/decrease horizontal input by each frame
     float horizontalInput;
     float lastHorizontalInput;
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
+    public bool isNotRunning;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -41,11 +46,8 @@ public class AIMovement : MonoBehaviour
 
     private void Awake()
     {
-        AI = GetComponent<AI>();
+        racer = GetComponent<Racer>();
         playerCollider = GetComponent<BoxCollider2D>();
-
-        // set base intelligence
-        intelligenceValue = Random.Range(0f, 0.5f);
 
         // set player collider sizes for standing & crouching
         playerColliderStandingSize = playerCollider.size;
@@ -63,7 +65,16 @@ public class AIMovement : MonoBehaviour
     {
         // get horizontal input with "smoothing"
         lastHorizontalInput = horizontalInput;
-        horizontalInput += 0.01f;
+
+        if (!isNotRunning)
+        {
+            horizontalInput += horizontalInputSmoothing;
+        }
+
+        if (isNotRunning)
+        {
+            horizontalInput -= horizontalInputSmoothing;
+        }
 
         if (horizontalInput > 1 || horizontalInput < -1)
         {
@@ -76,28 +87,52 @@ public class AIMovement : MonoBehaviour
         // check if player should turn around
         FlipDirection();
 
-        // modify intelligence based on current position in relation to the player
-        foreach (GameObject racer in GameManager.Instance.allRacers)
+        // get unstuck if sliding speed ends while too far away to do another action
+        if (rb.velocity.x == 0 && isSliding)
         {
-            if (racer.GetComponent<Player>())
-            {
-                // get stupider when ahead of player -- more stupider if further ahead in general
-                if (GetComponent<Racer>().currentPlacement > racer.GetComponent<Racer>().currentPlacement)
-                {
-                    intelligenceValue -= 0.001f * (GetComponent<Racer>().currentPlacement - racer.GetComponent<Racer>().currentPlacement);
-                }
+            EndSliding();
+        }
 
-                // get unstupider when behind player -- less stupider if further behind in general
-                if (GetComponent<Racer>().currentPlacement < racer.GetComponent<Racer>().currentPlacement)
+        // actually apply slide speed falloff
+        if (isSliding)
+        {
+            horizontalInput = 0;
+            rb.velocity -= new Vector2(slideSpeedFalloff * Mathf.Sign(rb.velocity.x), 0);
+        }
+
+
+        // -- modify intelligence based on current placement in race
+
+        for (var i = 0; i < GameManager.Instance.allRacers.Count; i++)
+        {
+            // get stupider when ahead of player -- more stupider if further ahead in general
+            if (GameManager.Instance.allRacers[i].GetComponent<Player>() && GameManager.Instance.allRacers[i].GetComponent<Racer>().currentPlacement > GetComponent<Racer>().currentPlacement)
+            {
+                float lastIntelligenceValue = intelligenceValue;
+                float racerCount = GameManager.Instance.allRacers.Count;
+
+                if (lastIntelligenceValue == intelligenceValue)
                 {
-                    intelligenceValue += 0.001f * (racer.GetComponent<Racer>().currentPlacement - GetComponent<Racer>().currentPlacement);
+                    intelligenceValue = (racerCount - GetComponent<Racer>().currentPlacement) / racerCount * maxIntelligenceValue;
+                }
+            }
+
+            // get unstupider when behind player -- less stupider if further behind in general
+            if (GameManager.Instance.allRacers[i].GetComponent<Player>() && GameManager.Instance.allRacers[i].GetComponent<Racer>().currentPlacement < GetComponent<Racer>().currentPlacement)
+            {
+                float lastIntelligenceValue = intelligenceValue;
+                float racerCount = GameManager.Instance.allRacers.Count;
+
+                if (lastIntelligenceValue == intelligenceValue)
+                {
+                    intelligenceValue = 0;
                 }
             }
         }
 
-        if (intelligenceValue > 0.5f)
+        if (intelligenceValue > maxIntelligenceValue)
         {
-            intelligenceValue = 0.5f;
+            intelligenceValue = maxIntelligenceValue;
         }
         if (intelligenceValue < 0)
         {
@@ -108,17 +143,17 @@ public class AIMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // mooooove!
-        if (!isSliding && !isCrouching && horizontalInput != 0)
+        if (!racer.isInHitStun && !isSliding && !isCrouching && horizontalInput != 0)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
         }
-        if (isCrouching)
+        if (!racer.isInHitStun && isCrouching)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
         }
 
         // slow player down if not inputting anything
-        if (Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
+        if (!racer.isInHitStun && Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
         {
             if (!isSliding)
             {
@@ -155,7 +190,7 @@ public class AIMovement : MonoBehaviour
     void GroundCheck()
     {
         // detect if a groundLayer object is within the 0.1 unit gap between the player's collider size and groundCheck's position
-        if (Physics2D.OverlapBox(groundCheck.position, playerCollider.size, 0, groundLayer))
+        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size, 0, groundLayer))
         {
             isGrounded = true;
         }
@@ -192,6 +227,7 @@ public class AIMovement : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        // if stuck behind a high obstacle and still within trigger area, crouch-walk to get around it
         if (collision.gameObject.transform.position.y - transform.position.y > 0)
         {
             if (rb.velocity.x == 0)
@@ -204,6 +240,7 @@ public class AIMovement : MonoBehaviour
         {
             if (isSliding && rb.velocity.x == 0)
             {
+                StopCoroutine(StartSliding());
                 EndSliding();
             }
         }
@@ -215,11 +252,13 @@ public class AIMovement : MonoBehaviour
         {
             if (isSliding)
             {
+                StopCoroutine(StartSliding());
                 EndSliding();
             }
 
             if (isCrouching)
             {
+                StopCoroutine(StartCrouching());
                 EndCrouching();
             }
         }
@@ -230,11 +269,17 @@ public class AIMovement : MonoBehaviour
         // randomly decide to either stop in place or just keep moving
         if (Random.Range(0, 1) == 1)
         {
-
+            isNotRunning = true;
         }
 
         // enforce delay on actions before executing
-        yield return new WaitForSeconds(Random.Range(intelligenceValue, intelligenceValue + 0.25f));
+        float racerCount = GameManager.Instance.allRacers.Count;
+        yield return new WaitForSeconds(Random.Range(intelligenceValue, intelligenceValue + (racerCount - (GetComponent<Racer>().currentPlacement + 1)) / racerCount * maxIntelligenceValue));
+
+        if (isNotRunning)
+        {
+            isNotRunning = false;
+        }
 
         StartCoroutine(coroutineName);
 
@@ -267,10 +312,6 @@ public class AIMovement : MonoBehaviour
     IEnumerator StartSliding()
     {
         isSliding = true;
-        horizontalInput = 0;
-
-        rb.velocity -= new Vector2(slideSpeedFalloff * Mathf.Sign(rb.velocity.x), 0);
-
         playerCollider.size = playerColliderSlidingSize;
         playerCollider.offset = playerColliderSlidingOffset;
 
@@ -280,6 +321,7 @@ public class AIMovement : MonoBehaviour
     void EndSliding()
     {
         isSliding = false;
+
         if (!isCrouching)
         {
             playerCollider.size = playerColliderStandingSize;
