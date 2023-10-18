@@ -240,6 +240,7 @@ MonoBehaviour:
   stand: {fileID: 21300000, guid: 2a24f0476b49fb24e97731e41c039134, type: 3}
   crouch: {fileID: 21300000, guid: bbf0d1a91ee118245a337724dc1b4567, type: 3}
   slide: {fileID: 21300000, guid: f710b45f173b6e349ad00b2af7845965, type: 3}
+  hurt: {fileID: 21300000, guid: f10dda86eeedfd245b3937074fb202df, type: 3}
 --- !u!114 &7693338443575237737
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -84,37 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2419146554112729790
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2230402274565498679}
-  m_Layer: 0
-  m_Name: Mounted Obstacle Slot (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2230402274565498679
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2419146554112729790}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3032585701786758766}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2590184566525701539
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,68 +257,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedTeleporter: {fileID: 0}
   roomBackground: {fileID: 26160541558663384}
---- !u!1 &3160878422453233043
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1672903426364843424}
-  m_Layer: 0
-  m_Name: Mounted Obstacle Slot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1672903426364843424
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3160878422453233043}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3032585701786758766}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3993127017868028002
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7360736991938891010}
-  m_Layer: 0
-  m_Name: Unmounted Obstacle Slot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7360736991938891010
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3993127017868028002}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: 1.525, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3032585701786758766}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5129163103988264828
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +426,7 @@ GameObject:
   - component: {fileID: 3032585701786758766}
   - component: {fileID: 8701004611158974292}
   m_Layer: 0
-  m_Name: Room Preset 1
+  m_Name: Room Preset 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,10 +451,6 @@ Transform:
   - {fileID: 4564816787890926454}
   - {fileID: 1285589365357616619}
   - {fileID: 924342319921287319}
-  - {fileID: 1672903426364843424}
-  - {fileID: 2230402274565498679}
-  - {fileID: 7360736991938891010}
-  - {fileID: 692151799966215955}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8701004611158974292
@@ -563,48 +466,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomCeiling: {fileID: 8250809083811014360}
-  mountedObstacleSlots:
-  - {fileID: 3160878422453233043}
-  - {fileID: 2419146554112729790}
-  unmountedObstacleSlots:
-  - {fileID: 3993127017868028002}
-  - {fileID: 7857598329358626785}
+  mountedObstacleSlots: []
+  unmountedObstacleSlots: []
   mountedObstaclesToGenerate:
   - {fileID: 2618767414964494069, guid: 858594199e997f3498838ebf471eaf20, type: 3}
-  - {fileID: 8572354915660991500, guid: 5976c2d3c72fa044ca6627e5cc9d10a4, type: 3}
   unmountedObstaclesToGenerate:
   - {fileID: 4867916353508047177, guid: 0b664786102cd7748b770292d2e697b3, type: 3}
---- !u!1 &7857598329358626785
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 692151799966215955}
-  m_Layer: 0
-  m_Name: Unmounted Obstacle Slot (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &692151799966215955
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7857598329358626785}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 1.525, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3032585701786758766}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8250809083811014360
 GameObject:
   m_ObjectHideFlags: 0

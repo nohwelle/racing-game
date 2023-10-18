@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Room : MonoBehaviour
 {
-    public List<GameObject> mountedObstacleSlots = new();
-    public List<GameObject> unmountedObstacleSlots = new();
-    public List<GameObject> mountedObstaclesToGenerate = new();
-    public List<GameObject> unmountedObstaclesToGenerate = new();
+    public GameObject roomCeiling;
+
+    [SerializeField] private List<GameObject> mountedObstacleSlots;
+    [SerializeField] private List<GameObject> unmountedObstacleSlots;
+    [SerializeField] private List<GameObject> mountedObstaclesToGenerate;
+    [SerializeField] private List<GameObject> unmountedObstaclesToGenerate;
 
 
     // Start is called before the first frame update
@@ -15,10 +19,10 @@ public class Room : MonoBehaviour
     {
         foreach (GameObject slot in mountedObstacleSlots)
         {
-            GameObject obstacle = Instantiate(mountedObstaclesToGenerate[Random.Range(0, mountedObstaclesToGenerate.Count - 1)]);
+            // this function doesn't work like you'd expect it to, probably because lists suck ass
+            GameObject obstacle = Instantiate(mountedObstaclesToGenerate[Random.Range(0, mountedObstaclesToGenerate.Count)]);
 
-            obstacle.transform.position = slot.transform.position;
-            obstacle.transform.rotation = Quaternion.identity;
+            obstacle.transform.SetPositionAndRotation(slot.transform.position + obstacle.transform.position, Quaternion.identity);
             obstacle.transform.parent = slot.transform.parent;
 
             Destroy(slot);
@@ -26,10 +30,9 @@ public class Room : MonoBehaviour
 
         foreach (GameObject slot in unmountedObstacleSlots)
         {
-            GameObject obstacle = Instantiate(unmountedObstaclesToGenerate[Random.Range(0, unmountedObstaclesToGenerate.Count - 1)]);
+            GameObject obstacle = Instantiate(unmountedObstaclesToGenerate[Random.Range(0, unmountedObstaclesToGenerate.Count)]);
 
-            obstacle.transform.position = slot.transform.position;
-            obstacle.transform.rotation = Quaternion.identity;
+            obstacle.transform.SetPositionAndRotation(slot.transform.position + obstacle.transform.position, Quaternion.identity);
             obstacle.transform.parent = slot.transform.parent;
 
             Destroy(slot);

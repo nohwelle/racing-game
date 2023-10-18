@@ -5,16 +5,18 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public List<GameObject> roomPrefabs;
+    [SerializeField] private List<GameObject> roomPrefabs;
 
     public Vector2 prefabGenerationPosition;
-    public float prefabHeightVariation;
-    public string targetType = "Teleporter"; // Class of the object you want to find
+    public string targetType = "Teleporter";
 
     List<GameObject> allRooms = new();
     List<GameObject> allTeleporters = new();
-    float prefabGenerationBuffer = 3;
-    public float roomsGenerated;
+
+    float prefabGenerationBuffer = 2; // how many rooms (excluding room 1) to create at the start of the game
+    float roomsGenerated; // how many rooms have been created
+    float towerHeight;
+
 
     public static LevelGenerator Instance;
 
@@ -25,11 +27,25 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
+        // create first room at prefab gen position
+        allRooms.Add(Instantiate(roomPrefabs[0], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + towerHeight), Quaternion.identity));
+        roomsGenerated++;
+
+        // add height of newest room to total tower height
+        towerHeight += roomPrefabs[0].GetComponent<Room>().roomCeiling.transform.position.y;
+
+        // create other rooms to fill the gen buffer
         for (var i = 0; i < prefabGenerationBuffer; i++)
         {
-            // create first room at prefab gen position
-            allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + (prefabHeightVariation * i)), Quaternion.identity));
+            // get new room to generate
+            int roomToGenerate = Random.Range(1, roomPrefabs.Count - 1);
+
+            // add new room to the top of the tower
+            allRooms.Add(Instantiate(roomPrefabs[roomToGenerate], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + towerHeight), Quaternion.identity));
             roomsGenerated++;
+
+            towerHeight += roomPrefabs[roomToGenerate].GetComponent<Room>().roomCeiling.transform.position.y;
+
         }
 
         // sort objects by creation time
@@ -74,11 +90,16 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateNewRoom(GameObject player)
     {
-        // generate new rooms above old ones - y position of room gen based on num of rooms player has completed
-        if (roomsGenerated - prefabGenerationBuffer != player.GetComponent<Racer>().roomsCompleted && roomPrefabs.Count != 0)
+        // generate new rooms above old ones
+        if (roomsGenerated - prefabGenerationBuffer + 1 != player.GetComponent<Racer>().roomsCompleted && roomPrefabs.Count != 0)
         {
-            allRooms.Add(Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count - 1)], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + prefabHeightVariation * roomsGenerated), Quaternion.identity));
+            // get new room to generate
+            int roomToGenerate = Random.Range(1, roomPrefabs.Count - 1);
+
+            allRooms.Add(Instantiate(roomPrefabs[roomToGenerate], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + towerHeight), Quaternion.identity));
             roomsGenerated++;
+
+            towerHeight += roomPrefabs[roomToGenerate].GetComponent<Room>().roomCeiling.transform.position.y;
 
             // sort objects by creation time
             allRooms.Sort((obj1, obj2) => obj2.GetInstanceID() - obj1.GetInstanceID());

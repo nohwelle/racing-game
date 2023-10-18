@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public Vector2 knockbackForce;
-    public float hitStunTime;
+    public Vector2 knockbackForce = new(-5, 3);
+    public float hitStunTime = 0.25f;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

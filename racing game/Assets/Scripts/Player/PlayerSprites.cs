@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class PlayerSprites : MonoBehaviour
 {
+    Racer racer;
     PlayerMovement playerMovement;
     AIMovement AIMovement;
+
     SpriteRenderer playerSprite;
     SpriteRenderer AISprite;
 
-    public Sprite stand, crouch, slide;
+    public Sprite stand, crouch, slide, hurt;
 
 
     private void Awake()
     {
+        racer = GetComponent<Racer>();
+
         if (GetComponent<Player>())
         {
             playerMovement = GetComponent<PlayerMovement>();
@@ -59,6 +63,20 @@ public class PlayerSprites : MonoBehaviour
         if (AIMovement && AIMovement.isSliding)
         {
             AISprite.sprite = slide;
+        }
+        
+        // hurt
+        if (racer && racer.isInHitStun)
+        {
+            if (playerSprite)
+            {
+                playerSprite.sprite = hurt;
+            }
+
+            if (AISprite)
+            {
+                AISprite.sprite = hurt;
+            }
         }
     }
 }

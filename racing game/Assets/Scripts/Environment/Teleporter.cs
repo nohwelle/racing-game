@@ -42,9 +42,9 @@ public class Teleporter : MonoBehaviour
             // teleport player
             racer.transform.position = new Vector2(linkedTeleporter.transform.position.x + collision.gameObject.transform.localScale.x, linkedTeleporter.transform.position.y);
 
-            // increment number of racers that entered this teleporter, kill whoever's last
+            // increment number of racers that entered this teleporter, kill whoever's last if we're not in room 1
             numOfRacersEntered++;
-            if (numOfRacersEntered == GameManager.Instance.allRacers.Count - 1)
+            if (numOfRacersEntered == GameManager.Instance.allRacers.Count - 1 && racer.GetComponent<Racer>().roomsCompleted != 0)
             {
                 Destroy(GameManager.Instance.allRacers[^1]);
                 GameManager.Instance.allRacers.RemoveAt(GameManager.Instance.allRacers.Count - 1);
