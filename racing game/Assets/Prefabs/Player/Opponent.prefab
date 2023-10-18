@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 6026173918244244468}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.025, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -67,6 +67,7 @@ Transform:
   m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3889956464120128705}
   - {fileID: 7851830093416652797}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -210,6 +211,7 @@ MonoBehaviour:
   currentPlacement: 0
   progressValue: 0
   isInHitStun: 0
+  hitStunDuration: 0
 --- !u!114 &2526929952966008635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,12 +267,45 @@ MonoBehaviour:
   slideSize: {x: 0.2, y: -0.375}
   slideOffset: {x: 0, y: -0.18}
   horizontalInputSmoothing: 0.01625
+  isStuckUnderSomething: 0
   isGrounded: 0
   isCrouching: 0
   isSliding: 0
   isNotRunning: 0
   rb: {fileID: 8584233502941203357}
-  groundCheck: {fileID: 3588364335971125119}
+  overheadCheck: {fileID: 3889956464120128705}
+  groundCheck: {fileID: 7851830093416652797}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+--- !u!1 &6499251131305966202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3889956464120128705}
+  m_Layer: 6
+  m_Name: Overhead Check
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3889956464120128705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6499251131305966202}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalScale: {x: 0.9, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3588364335971125119}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

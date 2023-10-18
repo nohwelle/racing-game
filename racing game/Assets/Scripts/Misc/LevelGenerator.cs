@@ -38,7 +38,7 @@ public class LevelGenerator : MonoBehaviour
         for (var i = 0; i < prefabGenerationBuffer; i++)
         {
             // get new room to generate
-            int roomToGenerate = Random.Range(1, roomPrefabs.Count - 1);
+            int roomToGenerate = Random.Range(1, roomPrefabs.Count);
 
             // add new room to the top of the tower
             allRooms.Add(Instantiate(roomPrefabs[roomToGenerate], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + towerHeight), Quaternion.identity));
@@ -94,7 +94,7 @@ public class LevelGenerator : MonoBehaviour
         if (roomsGenerated - prefabGenerationBuffer + 1 != player.GetComponent<Racer>().roomsCompleted && roomPrefabs.Count != 0)
         {
             // get new room to generate
-            int roomToGenerate = Random.Range(1, roomPrefabs.Count - 1);
+            int roomToGenerate = Random.Range(1, roomPrefabs.Count);
 
             allRooms.Add(Instantiate(roomPrefabs[roomToGenerate], new Vector2(prefabGenerationPosition.x, prefabGenerationPosition.y + towerHeight), Quaternion.identity));
             roomsGenerated++;

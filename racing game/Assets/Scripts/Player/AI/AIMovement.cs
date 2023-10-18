@@ -26,12 +26,14 @@ public class AIMovement : MonoBehaviour
     public float horizontalInputSmoothing = 0.01625f; // how much to increase/decrease horizontal input by each frame
     float horizontalInput;
     float lastHorizontalInput;
+    public bool isStuckUnderSomething;
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
     public bool isNotRunning;
 
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform overheadCheck;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
@@ -80,6 +82,9 @@ public class AIMovement : MonoBehaviour
         {
             horizontalInput = Mathf.Sign(horizontalInput);
         }
+
+        // check for overhead collision
+        OverheadCheck();
 
         // check for ground collision
         GroundCheck();
@@ -187,10 +192,28 @@ public class AIMovement : MonoBehaviour
         }
     }
 
+    void OverheadCheck()
+    {
+        // detect if a groundLayer object is within the gap between the player's collider size and overheadCheck's position
+        if (Physics2D.OverlapBox(overheadCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * overheadCheck.localScale * transform.localScale, 0, groundLayer))
+        {
+            isStuckUnderSomething = true;
+            
+            if (isGrounded)
+            {
+                StartCoroutine(StartCrouching());
+            }
+        }
+        else
+        {
+            isStuckUnderSomething = false;
+        }
+    }
+
     void GroundCheck()
     {
         // detect if a groundLayer object is within the 0.1 unit gap between the player's collider size and groundCheck's position
-        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size, 0, groundLayer))
+        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * transform.localScale, 0, groundLayer))
         {
             isGrounded = true;
         }
@@ -202,7 +225,7 @@ public class AIMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Obstacle>())
+        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
         {
             // if obstacle is above player, crouch/slide under it
             if (collision.gameObject.transform.position.y - transform.position.y > 0)
@@ -236,7 +259,7 @@ public class AIMovement : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.GetComponent<Obstacle>())
+        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
         {
             if (isSliding && rb.velocity.x == 0)
             {
@@ -248,7 +271,7 @@ public class AIMovement : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Obstacle>())
+        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
         {
             if (isSliding)
             {

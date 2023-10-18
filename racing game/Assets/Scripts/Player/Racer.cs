@@ -9,6 +9,7 @@ public class Racer : MonoBehaviour
     public float progressValue;
 
     public bool isInHitStun;
+    public float hitStunDuration;
 
     // Update is called once per frame
     void Update()
@@ -23,14 +24,20 @@ public class Racer : MonoBehaviour
                 currentPlacement = i + 1;
             }
         }
+
+        // start hitstun -- this has to be added in case the obstacle invoking hitstun gets removed for any reason
+        if (isInHitStun)
+        {
+            StartCoroutine(HitStunCooldown());
+        }
     }
 
-    public IEnumerator HitStunCooldown(float hitStunTime)
+
+    public IEnumerator HitStunCooldown()
     {
-        isInHitStun = true;
+        yield return new WaitForSeconds(hitStunDuration);
 
-        yield return new WaitForSeconds(hitStunTime);
-
+        hitStunDuration = 0;
         isInHitStun = false;
 
         yield break;

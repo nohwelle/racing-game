@@ -20,7 +20,11 @@ public class SpikePiston : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        originPosition = new(transform.position.x, transform.position.y - (transform.localScale.y / 2));
+    }
+
+    private void Start()
+    {
+        originPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -28,7 +32,7 @@ public class SpikePiston : MonoBehaviour
     {
         // make pole follow piston head
         pistonPole.SetPosition(0, originPosition);
-        pistonPole.SetPosition(1, new Vector2(transform.position.x, transform.position.y - (transform.localScale.y / 2)));
+        pistonPole.SetPosition(1, transform.position);
 
         if (isExtending)
         {
@@ -44,6 +48,13 @@ public class SpikePiston : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
         }
+
+        if (isExtending && isRetracting)
+        {
+            isExtending = false;
+            isRetracting = false;
+            rb.velocity = Vector2.zero;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -51,7 +62,10 @@ public class SpikePiston : MonoBehaviour
         if (collision.gameObject.GetComponent<Racer>() && !isExtending)
         {
             // make piston extend
-            isExtending = true;
+            if (!isRetracting)
+            {
+                isExtending = true;
+            }
         }
     }
 

@@ -25,11 +25,13 @@ public class PlayerMovement : MonoBehaviour
     bool isFacingLeft;
     float horizontalInput;
     float lastHorizontalInput;
+    public bool isStuckUnderSomething;
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
 
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform overheadCheck;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
@@ -68,6 +70,9 @@ public class PlayerMovement : MonoBehaviour
         lastHorizontalInput = horizontalInput;
         horizontalInput = Input.GetAxis("Horizontal");
 
+        // check for overhead collision
+        OverheadCheck();
+
         // check for ground collision
         GroundCheck();
 
@@ -82,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCrouching();
         }
-        if (isCrouching && Input.GetKeyUp(crouchKey))
+        if ((isCrouching && !isStuckUnderSomething && Input.GetKeyUp(crouchKey)) || (!isStuckUnderSomething && isCrouching && !Input.GetKey(crouchKey)))
         {
             EndCrouching();
         }
@@ -90,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         {
             StartSliding();
         }
-        if (isSliding && (Input.GetKeyUp(crouchKey) || rb.velocity.x == 0))
+        if ((isSliding && !isStuckUnderSomething && Input.GetKeyUp(crouchKey)) || (isSliding && rb.velocity.x == 0))
         {
             EndSliding();
         }
@@ -146,6 +151,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void OverheadCheck()
+    {
+        // detect if a groundLayer object is within the gap between the player's collider size and overheadCheck's position
+        if (Physics2D.OverlapBox(overheadCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * overheadCheck.localScale * transform.localScale, 0, groundLayer))
+        {
+            isStuckUnderSomething = true;
+            
+            if (isGrounded)
+            {
+                StartCrouching();
+            }
+        }
+        else
+        {
+            isStuckUnderSomething = false;
+        }
+    }
+
     void GroundCheck()
     {
         // detect if a groundLayer object is within the gap between the player's collider size and groundCheck's position
@@ -158,6 +181,19 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
     }
+
+    /*private void OnDrawGizmos()
+    {
+        if (playerCollider && groundCheck)
+        {
+            Gizmos.DrawWireCube(groundCheck.position + (Vector3)(playerCollider.offset * groundCheck.localScale * transform.localScale), playerCollider.size * groundCheck.localScale * transform.localScale);
+        }
+
+        if (playerCollider && overheadCheck)
+        {
+            Gizmos.DrawWireCube(overheadCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * overheadCheck.localScale * transform.localScale);
+        }
+    }*/
 
     void StartCrouching()
     {
