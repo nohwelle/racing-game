@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
@@ -300,7 +301,10 @@ public class AIMovement : MonoBehaviour
 
     IEnumerator Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+        if (isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+        }
 
         yield break;
     }

@@ -63,7 +63,7 @@ Transform:
   m_GameObject: {fileID: 6419072449057254216}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -258,7 +258,6 @@ MonoBehaviour:
   intelligenceValue: 0
   maxIntelligenceValue: 0.5
   moveSpeed: 16.25
-  moveSpeedLimit: 3.25
   moveFriction: 0.1625
   jumpSpeed: 4.25
   slideSpeedFalloff: 0.0075
@@ -271,7 +270,6 @@ MonoBehaviour:
   isGrounded: 0
   isCrouching: 0
   isSliding: 0
-  isNotRunning: 0
   rb: {fileID: 8584233502941203357}
   overheadCheck: {fileID: 3889956464120128705}
   groundCheck: {fileID: 7851830093416652797}
@@ -303,8 +301,8 @@ Transform:
   m_GameObject: {fileID: 6499251131305966202}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0}
-  m_LocalScale: {x: 0.9, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.175, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3588364335971125119}
