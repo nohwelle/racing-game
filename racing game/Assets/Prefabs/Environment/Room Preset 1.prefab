@@ -573,7 +573,6 @@ MonoBehaviour:
   - {fileID: 2618767414964494069, guid: 858594199e997f3498838ebf471eaf20, type: 3}
   - {fileID: 8572354915660991500, guid: 5976c2d3c72fa044ca6627e5cc9d10a4, type: 3}
   - {fileID: 8956977220896762607, guid: bd79e5b98a0b7534e97cbc8c9c44bbcb, type: 3}
-  - {fileID: 7414334572260511928, guid: e5814faeb5667d14f83dd0cb8315339d, type: 3}
   unmountedObstaclesToGenerate:
   - {fileID: 4867916353508047177, guid: 0b664786102cd7748b770292d2e697b3, type: 3}
 --- !u!1 &7857598329358626785

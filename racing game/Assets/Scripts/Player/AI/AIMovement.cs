@@ -13,7 +13,7 @@ public class AIMovement : MonoBehaviour
     public float intelligenceValue; // more intelligence value = more stupid
     public float maxIntelligenceValue = 0.5f;
     public float moveSpeed = 16.25f;
-    public float moveSpeedLimit = 3.25f;
+    float moveSpeedLimit;
     public float moveFriction = 0.1625f;
     public float jumpSpeed = 4.25f;
     public float slideSpeedFalloff = 0.0075f;
@@ -30,7 +30,6 @@ public class AIMovement : MonoBehaviour
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
-    public bool isNotRunning;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform overheadCheck;
@@ -68,20 +67,15 @@ public class AIMovement : MonoBehaviour
         // get horizontal input with "smoothing"
         lastHorizontalInput = horizontalInput;
 
-        if (!isNotRunning)
-        {
-            horizontalInput += horizontalInputSmoothing;
-        }
-
-        if (isNotRunning)
-        {
-            horizontalInput -= horizontalInputSmoothing;
-        }
+        horizontalInput += horizontalInputSmoothing;
 
         if (horizontalInput > 1 || horizontalInput < -1)
         {
             horizontalInput = Mathf.Sign(horizontalInput);
         }
+
+        // set move speed limit
+        moveSpeedLimit = moveSpeed / 5;
 
         // check for overhead collision
         OverheadCheck();
@@ -155,6 +149,12 @@ public class AIMovement : MonoBehaviour
         if (!racer.isInHitStun && isCrouching)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
+        }
+
+        // get-out-of-slides-sooner card -- end slide if crouch-walking would be faster
+        if (isSliding && Mathf.Abs(rb.velocity.x) < moveSpeedLimit / 2)
+        {
+            EndSliding();
         }
 
         // slow player down if not inputting anything
@@ -289,20 +289,9 @@ public class AIMovement : MonoBehaviour
 
     IEnumerator Think(IEnumerator coroutineName)
     {
-        // randomly decide to either stop in place or just keep moving
-        if (Random.Range(0, 1) == 1)
-        {
-            isNotRunning = true;
-        }
-
         // enforce delay on actions before executing
         float racerCount = GameManager.Instance.allRacers.Count;
         yield return new WaitForSeconds(Random.Range(intelligenceValue, intelligenceValue + (racerCount - (GetComponent<Racer>().currentPlacement + 1)) / racerCount * maxIntelligenceValue));
-
-        if (isNotRunning)
-        {
-            isNotRunning = false;
-        }
 
         StartCoroutine(coroutineName);
 

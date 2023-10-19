@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 229776566714180313}
   - component: {fileID: 2326818257119658140}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ Transform:
   m_GameObject: {fileID: 3055955359419460000}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2, y: 0.5, z: 0}
+  m_LocalPosition: {x: 3, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -823,6 +823,7 @@ MonoBehaviour:
   mountedObstaclesToGenerate:
   - {fileID: 2618767414964494069, guid: 858594199e997f3498838ebf471eaf20, type: 3}
   - {fileID: 8572354915660991500, guid: 5976c2d3c72fa044ca6627e5cc9d10a4, type: 3}
+  - {fileID: 8956977220896762607, guid: bd79e5b98a0b7534e97cbc8c9c44bbcb, type: 3}
   unmountedObstaclesToGenerate:
   - {fileID: 4867916353508047177, guid: 0b664786102cd7748b770292d2e697b3, type: 3}
 --- !u!1 &7989234393645353842
@@ -854,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 7989234393645353842}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 0.5, z: 0}
+  m_LocalPosition: {x: -3, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1340,7 +1341,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3963023908998686832}
   - component: {fileID: 4559403067340615339}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

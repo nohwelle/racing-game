@@ -34,13 +34,23 @@ public class Teleporter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // teleport player to linked teleporter if there is one, then increment num of rooms completed
+        // teleport racer to linked teleporter if there is one, then increment num of rooms completed
         if (collision.gameObject.GetComponent<Racer>() && linkedTeleporter)
         {
             GameObject racer = collision.gameObject;
 
-            // teleport player
+            // teleport racer
             racer.transform.position = new Vector2(linkedTeleporter.transform.position.x + collision.gameObject.transform.localScale.x, linkedTeleporter.transform.position.y);
+
+            // increase racer's move speed
+            if (racer.GetComponent<PlayerMovement>())
+            {
+                racer.GetComponent<PlayerMovement>().moveSpeed += 0.25f;
+            }
+            if (racer.GetComponent<AIMovement>())
+            {
+                racer.GetComponent<AIMovement>().moveSpeed += 0.25f;
+            }
 
             // increment number of racers that entered this teleporter, kill whoever's last if we're not in room 1
             numOfRacersEntered++;
@@ -53,7 +63,7 @@ public class Teleporter : MonoBehaviour
             // increment rooms completed for real players
             racer.GetComponent<Racer>().roomsCompleted++;
 
-            // change background color to color of first entered player
+            // change background color to color of first entered racer
             if (roomBackground && !hasGeneratedNewRoom)
             {
                 roomBackground.GetComponent<SpriteRenderer>().color = racer.GetComponent<SpriteRenderer>().material.GetColor("_Player_Color");

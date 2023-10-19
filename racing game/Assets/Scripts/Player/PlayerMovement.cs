@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode crouchKey;
 
     public float moveSpeed = 16.25f;
-    public float moveSpeedLimit = 3.25f;
+    float moveSpeedLimit;
     public float moveFriction = 0.1625f;
     public float jumpSpeed = 4.25f;
     public float slideSpeedFalloff = 0.0075f;
@@ -69,6 +69,9 @@ public class PlayerMovement : MonoBehaviour
         // get horizontal input with smoothing
         lastHorizontalInput = horizontalInput;
         horizontalInput = Input.GetAxis("Horizontal");
+
+        // set move speed limit
+        moveSpeedLimit = moveSpeed / 5;
 
         // check for overhead collision
         OverheadCheck();
@@ -182,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (playerCollider && groundCheck)
         {
@@ -193,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Gizmos.DrawWireCube(overheadCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * overheadCheck.localScale * transform.localScale);
         }
-    }*/
+    }
 
     void StartCrouching()
     {
