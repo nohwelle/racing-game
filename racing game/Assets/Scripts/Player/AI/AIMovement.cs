@@ -226,7 +226,7 @@ public class AIMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
+        if (collision.gameObject.transform.parent && collision.gameObject.transform.parent.GetComponent<Obstacle>())
         {
             // if obstacle is above player, crouch/slide under it
             if (collision.gameObject.transform.position.y - transform.position.y > 0)
@@ -251,28 +251,40 @@ public class AIMovement : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        // if stuck behind a high obstacle and still within trigger area, crouch-walk to get around it
-        if (collision.gameObject.transform.position.y - transform.position.y > 0)
+        if (collision.gameObject.transform.parent)
         {
-            if (rb.velocity.x == 0)
+            // if stuck behind a high obstacle and still within its trigger area, crouch-walk under it if it's shorter than the player
+            if (collision.gameObject.transform.position.y > transform.position.y && collision.gameObject.transform.parent.localScale.y < transform.localScale.y && rb.velocity.x == 0)
             {
                 StartCoroutine(Think(StartCrouching()));
             }
-        }
 
-        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
-        {
-            if (isSliding && rb.velocity.x == 0)
+            // if stuck behind a low obstacle and still within its trigger area, jump over it
+            if (collision.gameObject.transform.position.y < transform.position.y)
             {
-                StopCoroutine(StartSliding());
-                EndSliding();
+                StartCoroutine(Think(Jump()));
+            }
+
+            // if stuck behind an obstacle and still within its trigger area, jump over it if it's taller than the player
+            if (collision.gameObject.transform.parent.localScale.y > transform.localScale.y)
+            {
+                StartCoroutine(Think(Jump()));
+            }
+
+            if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
+            {
+                if (isSliding && rb.velocity.x == 0)
+                {
+                    StopCoroutine(StartSliding());
+                    EndSliding();
+                }
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.transform.parent.GetComponent<Obstacle>())
+        if (collision.gameObject.transform.parent && collision.gameObject.transform.parent.GetComponent<Obstacle>())
         {
             if (isSliding)
             {
