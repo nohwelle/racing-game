@@ -6,8 +6,13 @@ using UnityEngine;
 public class PlayerSprites : MonoBehaviour
 {
     Racer racer;
-    PlayerMovement playerMovement;
-    AIMovement AIMovement;
+    CTFRunner ctfRunner;
+
+    RacePlayerMovement racePlayerMovement;
+    CTFPlayerMovement ctfPlayerMovement;
+
+    RaceAIMovement raceAIMovement;
+    CTFAIMovement ctfAIMovement;
 
     SpriteRenderer playerSprite;
     SpriteRenderer AISprite;
@@ -18,16 +23,29 @@ public class PlayerSprites : MonoBehaviour
     private void Awake()
     {
         racer = GetComponent<Racer>();
+        ctfRunner = GetComponent<CTFRunner>();
 
-        if (GetComponent<Player>())
+        if (GetComponent<RacePlayer>())
         {
-            playerMovement = GetComponent<PlayerMovement>();
+            racePlayerMovement = GetComponent<RacePlayerMovement>();
             playerSprite = GetComponent<SpriteRenderer>();
         }
 
-        if (GetComponent<AI>())
+        if (GetComponent<CTFPlayer>())
         {
-            AIMovement = GetComponent<AIMovement>();
+            ctfPlayerMovement = GetComponent<CTFPlayerMovement>();
+            playerSprite = GetComponent<SpriteRenderer>();
+        }
+
+        if (GetComponent<RaceAI>())
+        {
+            raceAIMovement = GetComponent<RaceAIMovement>();
+            AISprite = GetComponent<SpriteRenderer>();
+        }
+
+        if (GetComponent<CTFAI>())
+        {
+            ctfAIMovement = GetComponent<CTFAIMovement>();
             AISprite = GetComponent<SpriteRenderer>();
         }
     }
@@ -36,37 +54,37 @@ public class PlayerSprites : MonoBehaviour
     void Update()
     {
         // standing
-        if (playerMovement && !playerMovement.isCrouching && !playerMovement.isSliding)
+        if ((racePlayerMovement && !racePlayerMovement.isCrouching && !racePlayerMovement.isSliding) || (ctfPlayerMovement && !ctfPlayerMovement.isCrouching && !ctfPlayerMovement.isSliding))
         {
             playerSprite.sprite = stand;
         }
-        if (AIMovement && !AIMovement.isCrouching && !AIMovement.isSliding)
+        if ((raceAIMovement && !raceAIMovement.isCrouching && !raceAIMovement.isSliding) || (ctfAIMovement && !ctfAIMovement.isCrouching && !ctfAIMovement.isSliding))
         {
             AISprite.sprite = stand;
         }
 
         // crouching
-        if (playerMovement && playerMovement.isCrouching)
+        if ((racePlayerMovement && racePlayerMovement.isCrouching) || (ctfPlayerMovement && ctfPlayerMovement.isCrouching))
         {
             playerSprite.sprite = crouch;
         }
-        if (AIMovement && AIMovement.isCrouching)
+        if ((raceAIMovement && raceAIMovement.isCrouching) || (ctfAIMovement && ctfAIMovement.isCrouching))
         {
             AISprite.sprite = crouch;
         }
 
         // sliding
-        if (playerMovement && playerMovement.isSliding)
+        if ((racePlayerMovement && racePlayerMovement.isSliding) || (ctfPlayerMovement && ctfPlayerMovement.isSliding))
         {
             playerSprite.sprite = slide;
         }
-        if (AIMovement && AIMovement.isSliding)
+        if ((raceAIMovement && raceAIMovement.isSliding) || (ctfAIMovement && ctfAIMovement.isSliding))
         {
             AISprite.sprite = slide;
         }
         
         // hurt
-        if (racer && racer.isInHitStun)
+        if ((racer && racer.isInHitStun) || (ctfRunner && ctfRunner.isInHitStun))
         {
             if (playerSprite)
             {

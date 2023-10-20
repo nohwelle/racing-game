@@ -43,12 +43,12 @@ GameObject:
   - component: {fileID: 8276342268149504969}
   - component: {fileID: -4893396460310565107}
   - component: {fileID: 8584233502941203357}
-  - component: {fileID: 5016165278084137493}
-  - component: {fileID: 2526929952966008635}
   - component: {fileID: 5230434884557133309}
-  - component: {fileID: 7693338443575237737}
+  - component: {fileID: 1484190517575458618}
+  - component: {fileID: 8429900597367029634}
+  - component: {fileID: 6204328582836296015}
   m_Layer: 6
-  m_Name: Opponent
+  m_Name: CTF Opponent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,38 +195,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5016165278084137493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419072449057254216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3258cb4ce8f5174c8e0a8613866c240, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomsCompleted: 0
-  currentPlacement: 0
-  progressValue: 0
-  isInHitStun: 0
-  hitStunDuration: 0
---- !u!114 &2526929952966008635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419072449057254216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28e8a027b33160c4e8405fd4c936d00f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerMaterial: {fileID: 2100000, guid: de9eb337f034c9e48b0b10927606283e, type: 2}
-  playerColor: {r: 1, g: 1, b: 1, a: 1}
-  playerOutlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &5230434884557133309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,7 +211,7 @@ MonoBehaviour:
   crouch: {fileID: 21300000, guid: bbf0d1a91ee118245a337724dc1b4567, type: 3}
   slide: {fileID: 21300000, guid: f710b45f173b6e349ad00b2af7845965, type: 3}
   hurt: {fileID: 21300000, guid: f10dda86eeedfd245b3937074fb202df, type: 3}
---- !u!114 &7693338443575237737
+--- !u!114 &1484190517575458618
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,7 +220,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 6419072449057254216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76831029bb7ee6141befebda4510e3e6, type: 3}
+  m_Script: {fileID: 11500000, guid: ade069ebba10f2a41a5515f4045f8e8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInHitStun: 0
+  hitStunDuration: 0
+--- !u!114 &8429900597367029634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6419072449057254216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045eae2c1d8e5654583f77d6a131a6fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMaterial: {fileID: 2100000, guid: de9eb337f034c9e48b0b10927606283e, type: 2}
+  playerColor: {r: 1, g: 1, b: 1, a: 0}
+  playerOutlineColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &6204328582836296015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6419072449057254216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26937da7142d30419ad4113378dea28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   intelligenceValue: 0

@@ -1,15 +1,11 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
-public class AIMovement : MonoBehaviour
+public class CTFAIMovement : MonoBehaviour
 {
-    Racer racer;
+    CTFRunner ctfRunner;
 
     public float intelligenceValue; // more intelligence value = more stupid
     public float maxIntelligenceValue = 0.5f;
@@ -32,6 +28,8 @@ public class AIMovement : MonoBehaviour
     public bool isCrouching;
     public bool isSliding;
 
+    GameObject targetToReach;
+
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform overheadCheck;
     [SerializeField] private Transform groundCheck;
@@ -48,7 +46,7 @@ public class AIMovement : MonoBehaviour
 
     private void Awake()
     {
-        racer = GetComponent<Racer>();
+        ctfRunner = GetComponent<CTFRunner>();
         playerCollider = GetComponent<BoxCollider2D>();
 
         // set player collider sizes for standing & crouching
@@ -60,6 +58,11 @@ public class AIMovement : MonoBehaviour
 
         playerColliderSlidingSize = new Vector2(playerColliderStandingSize.x + slideSize.x, playerColliderStandingSize.y + slideSize.y);
         playerColliderSlidingOffset = new Vector2(playerColliderStandingOffset.x + slideOffset.x, playerColliderStandingOffset.y + slideOffset.y);
+    }
+
+    private void Start()
+    {
+        intelligenceValue = Random.Range(0, maxIntelligenceValue);
     }
 
     // Update is called once per frame
@@ -99,55 +102,16 @@ public class AIMovement : MonoBehaviour
             horizontalInput = 0;
             rb.velocity -= new Vector2(slideSpeedFalloff * Mathf.Sign(rb.velocity.x), 0);
         }
-
-
-        // -- modify intelligence based on current placement in race
-
-        for (var i = 0; i < GameManager.Instance.allRacers.Count; i++)
-        {
-            // get stupider when ahead of player -- more stupider if further ahead in general
-            if (GameManager.Instance.allRacers[i].GetComponent<Player>() && GameManager.Instance.allRacers[i].GetComponent<Racer>().currentPlacement > GetComponent<Racer>().currentPlacement)
-            {
-                float lastIntelligenceValue = intelligenceValue;
-                float racerCount = GameManager.Instance.allRacers.Count;
-
-                if (lastIntelligenceValue == intelligenceValue)
-                {
-                    intelligenceValue = (racerCount - GetComponent<Racer>().currentPlacement) / racerCount * maxIntelligenceValue;
-                }
-            }
-
-            // get unstupider when behind player -- less stupider if further behind in general
-            if (GameManager.Instance.allRacers[i].GetComponent<Player>() && GameManager.Instance.allRacers[i].GetComponent<Racer>().currentPlacement < GetComponent<Racer>().currentPlacement)
-            {
-                float lastIntelligenceValue = intelligenceValue;
-                float racerCount = GameManager.Instance.allRacers.Count;
-
-                if (lastIntelligenceValue == intelligenceValue)
-                {
-                    intelligenceValue = 0;
-                }
-            }
-        }
-
-        if (intelligenceValue > maxIntelligenceValue)
-        {
-            intelligenceValue = maxIntelligenceValue;
-        }
-        if (intelligenceValue < 0)
-        {
-            intelligenceValue = 0;
-        }
     }
 
     private void FixedUpdate()
     {
         // mooooove!
-        if (!racer.isInHitStun && !isSliding && !isCrouching && horizontalInput != 0)
+        if (!ctfRunner.isInHitStun && !isSliding && !isCrouching && horizontalInput != 0)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed * Time.deltaTime, 0);
         }
-        if (!racer.isInHitStun && isCrouching)
+        if (!ctfRunner.isInHitStun && isCrouching)
         {
             rb.velocity += new Vector2(horizontalInput * moveSpeed / 2 * Time.deltaTime, 0);
         }
@@ -159,7 +123,7 @@ public class AIMovement : MonoBehaviour
         }
 
         // slow player down if not inputting anything
-        if (!racer.isInHitStun && Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
+        if (!ctfRunner.isInHitStun && Mathf.Abs(horizontalInput) <= Mathf.Abs(lastHorizontalInput) && Mathf.Abs(horizontalInput) < 1 && rb.velocity.x != 0)
         {
             if (!isSliding)
             {
@@ -303,7 +267,7 @@ public class AIMovement : MonoBehaviour
     IEnumerator Think(IEnumerator coroutineName)
     {
         // enforce delay on actions before executing
-        float racerCount = GameManager.Instance.allRacers.Count;
+        float racerCount = RaceGameManager.Instance.allRacers.Count;
         yield return new WaitForSeconds(Random.Range(intelligenceValue, intelligenceValue + (racerCount - (GetComponent<Racer>().currentPlacement + 1)) / racerCount * maxIntelligenceValue));
 
         StartCoroutine(coroutineName);

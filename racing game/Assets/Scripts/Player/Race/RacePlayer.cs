@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Player : MonoBehaviour
+public class RacePlayer : MonoBehaviour
 {
     public KeyCode resetKey;
     public TMP_Text roomsCompletedText;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
         racer = GetComponent<Racer>();
 
         playerMaterial = GetComponent<SpriteRenderer>().material;
-        playerMaterial.SetColor("_Player_Color", playerColor);
+        playerMaterial.SetColor("_RacePlayer_Color", playerColor);
         playerMaterial.SetColor("_Outline_Color", playerOutlineColor);
     }
 
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         // DEBUG -- reset player to spawn point
         if (resetKey != KeyCode.None && Input.GetKeyDown(resetKey))
         {
-            transform.position = GameManager.Instance.spawnPoint.transform.position;
+            transform.position = RaceGameManager.Instance.spawnPoint.transform.position;
         }
 
         // update rooms completed text
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
         // -- FIGURE OUT HOW TO APPEND CORRECT SUFFIX
         if (currentPlacementText)
         {
-            currentPlacementText.text = racer.currentPlacement.ToString() + "/" + GameManager.Instance.allRacers.Count.ToString();
+            currentPlacementText.text = racer.currentPlacement.ToString() + "/" + RaceGameManager.Instance.allRacers.Count.ToString();
         }
     }
 }

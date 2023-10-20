@@ -43,21 +43,21 @@ public class Teleporter : MonoBehaviour
             racer.transform.position = new Vector2(linkedTeleporter.transform.position.x + collision.gameObject.transform.localScale.x, linkedTeleporter.transform.position.y);
 
             // increase racer's move speed
-            if (racer.GetComponent<PlayerMovement>())
+            if (racer.GetComponent<RacePlayerMovement>())
             {
-                racer.GetComponent<PlayerMovement>().moveSpeed += 0.25f;
+                racer.GetComponent<RacePlayerMovement>().moveSpeed += 0.25f;
             }
-            if (racer.GetComponent<AIMovement>())
+            if (racer.GetComponent<RaceAIMovement>())
             {
-                racer.GetComponent<AIMovement>().moveSpeed += 0.25f;
+                racer.GetComponent<RaceAIMovement>().moveSpeed += 0.25f;
             }
 
             // increment number of racers that entered this teleporter, kill whoever's last if we're not in room 1
             numOfRacersEntered++;
-            if (numOfRacersEntered == GameManager.Instance.allRacers.Count - 1 && racer.GetComponent<Racer>().roomsCompleted != 0)
+            if (numOfRacersEntered == RaceGameManager.Instance.allRacers.Count - 1 && racer.GetComponent<Racer>().roomsCompleted != 0)
             {
-                Destroy(GameManager.Instance.allRacers[^1]);
-                GameManager.Instance.allRacers.RemoveAt(GameManager.Instance.allRacers.Count - 1);
+                Destroy(RaceGameManager.Instance.allRacers[^1]);
+                RaceGameManager.Instance.allRacers.RemoveAt(RaceGameManager.Instance.allRacers.Count - 1);
             }
 
             // increment rooms completed for real players
@@ -66,7 +66,7 @@ public class Teleporter : MonoBehaviour
             // change background color to color of first entered racer
             if (roomBackground && !hasGeneratedNewRoom)
             {
-                roomBackground.GetComponent<SpriteRenderer>().color = racer.GetComponent<SpriteRenderer>().material.GetColor("_Player_Color");
+                roomBackground.GetComponent<SpriteRenderer>().color = racer.GetComponent<SpriteRenderer>().material.GetColor("_RacePlayer_Color");
 
                 // fix the alpha
                 Color color = roomBackground.GetComponent<SpriteRenderer>().color;

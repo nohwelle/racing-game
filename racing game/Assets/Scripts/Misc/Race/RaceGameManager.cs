@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class RaceGameManager : MonoBehaviour
 {
     public GameObject playerPrefab;
     public GameObject spawnPoint;
 
-    public float numOfAIPlayersToAdd;
+    public float numOfAIRacePlayersToAdd;
 
     public List<GameObject> allRacers;
 
 
-    public static GameManager Instance;
+    public static RaceGameManager Instance;
 
     private void Awake()
     {
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // add AI players
-        for (var i = 0; i < numOfAIPlayersToAdd; i++)
+        for (var i = 0; i < numOfAIRacePlayersToAdd; i++)
         {
             Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
         }

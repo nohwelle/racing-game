@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class RaceCameraFollow : MonoBehaviour
 {
     public Transform target;             // The target object
     public float boundaryY = 2f;         // The boundary in the Y-axis
