@@ -16,5 +16,12 @@ public class Obstacle : MonoBehaviour
             collision.gameObject.GetComponent<Racer>().hitStunDuration = hitStunDuration;
             collision.gameObject.GetComponent<Racer>().isInHitStun = true;
         }
+
+        if (collision.gameObject.GetComponent<CTFRunner>() && hitStunDuration > 0)
+        {
+            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(knockbackForce, ForceMode2D.Impulse);
+            collision.gameObject.GetComponent<CTFRunner>().hitStunDuration = hitStunDuration;
+            collision.gameObject.GetComponent<CTFRunner>().isInHitStun = true;
+        }
     }
 }

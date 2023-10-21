@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CTFRunner : MonoBehaviour
 {
+    public int teamIdentity;
+
     public bool isInHitStun;
     public float hitStunDuration;
 

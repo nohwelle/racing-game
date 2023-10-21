@@ -21,15 +21,18 @@ public class CTFPlayerMovement : MonoBehaviour
     public Vector2 slideOffset;
 
     bool isFacingLeft;
+    public bool isFacingLeftOnInitialJump;
     float horizontalInput;
     float lastHorizontalInput;
     public bool isStuckUnderSomething;
+    public bool canWallJump;
     public bool isGrounded;
     public bool isCrouching;
     public bool isSliding;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform overheadCheck;
+    [SerializeField] private Transform wallJumpCheck;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
@@ -74,6 +77,9 @@ public class CTFPlayerMovement : MonoBehaviour
         // check for overhead collision
         OverheadCheck();
 
+        // check for wall jump ability
+        WallJumpCheck();
+
         // check for ground collision
         GroundCheck();
 
@@ -81,6 +87,44 @@ public class CTFPlayerMovement : MonoBehaviour
         if (isGrounded && Input.GetKeyDown(jumpKey))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+
+            if (isFacingLeft)
+            {
+                isFacingLeftOnInitialJump = true;
+            }
+            else
+            {
+                isFacingLeftOnInitialJump = false;
+            }
+        }
+
+        // perform wall jump
+        // -- TO DO: modify this to allow chained wall jumps
+        if (!isGrounded && canWallJump && Input.GetKeyDown(jumpKey))
+        {
+            // wall jump to the left if player has turned around since initial jump
+            if (!isGrounded && !isFacingLeftOnInitialJump)
+            {
+                if (!isFacingLeft)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+                    return;
+                }
+
+                rb.velocity = new Vector2(jumpSpeed * Mathf.Sign(horizontalInput), jumpSpeed);
+            }
+
+            // wall jump to the right if player has turned around since initial jump
+            if (!isGrounded && isFacingLeftOnInitialJump)
+            {
+                if (isFacingLeft)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+                    return;
+                }
+
+                rb.velocity = new Vector2(jumpSpeed * Mathf.Sign(horizontalInput), jumpSpeed);
+            }
         }
 
         // start or end crouch/slide
@@ -170,10 +214,23 @@ public class CTFPlayerMovement : MonoBehaviour
         }
     }
 
+    void WallJumpCheck()
+    {
+        // detect if a groundLayer object is within the gap between the player's collider size and wallJumpCheck's position
+        if (Physics2D.OverlapBox(wallJumpCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * wallJumpCheck.localScale * transform.localScale, 0, groundLayer))
+        {
+            canWallJump = true;
+        }
+        else
+        {
+            canWallJump = false;
+        }
+    }
+
     void GroundCheck()
     {
         // detect if a groundLayer object is within the gap between the player's collider size and groundCheck's position
-        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * transform.localScale, 0, groundLayer))
+        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * groundCheck.localScale * transform.localScale, 0, groundLayer))
         {
             isGrounded = true;
         }
@@ -187,7 +244,12 @@ public class CTFPlayerMovement : MonoBehaviour
     {
         if (playerCollider && groundCheck)
         {
-            Gizmos.DrawWireCube(groundCheck.position + (Vector3)(playerCollider.offset * groundCheck.localScale * transform.localScale), playerCollider.size * groundCheck.localScale * transform.localScale);
+            Gizmos.DrawWireCube(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * groundCheck.localScale * transform.localScale);
+        }
+
+        if (playerCollider && wallJumpCheck)
+        {
+            Gizmos.DrawWireCube(wallJumpCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * wallJumpCheck.localScale * transform.localScale);
         }
 
         if (playerCollider && overheadCheck)
