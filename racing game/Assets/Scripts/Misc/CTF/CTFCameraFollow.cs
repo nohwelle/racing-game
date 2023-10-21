@@ -15,7 +15,7 @@ public class CTFCameraFollow : MonoBehaviour
         SetNewLastCameraPosition();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (target == null)
         {

@@ -8,6 +8,7 @@ public class CTFPlayerMovement : MonoBehaviour
 
     public KeyCode jumpKey;
     public KeyCode crouchKey;
+    public KeyCode useKey;
 
     public float moveSpeed = 16.25f;
     float moveSpeedLimit;
