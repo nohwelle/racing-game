@@ -112,6 +112,7 @@ public class CTFPlayerMovement : MonoBehaviour
                 }
 
                 rb.velocity = new Vector2(jumpSpeed * Mathf.Sign(horizontalInput), jumpSpeed);
+                isFacingLeftOnInitialJump = !isFacingLeftOnInitialJump;
             }
 
             // wall jump to the right if player has turned around since initial jump
@@ -124,6 +125,7 @@ public class CTFPlayerMovement : MonoBehaviour
                 }
 
                 rb.velocity = new Vector2(jumpSpeed * Mathf.Sign(horizontalInput), jumpSpeed);
+                isFacingLeftOnInitialJump = !isFacingLeftOnInitialJump;
             }
         }
 

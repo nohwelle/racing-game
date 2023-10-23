@@ -266,7 +266,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
@@ -2663,7 +2663,7 @@ GameObject:
   m_Component:
   - component: {fileID: 220443955}
   - component: {fileID: 220443956}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Yellow Base Elevator (In)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2747,7 +2747,7 @@ GameObject:
   m_Component:
   - component: {fileID: 233920205}
   - component: {fileID: 233920206}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Green Base Elevator (In)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4592,7 +4592,9 @@ GameObject:
   m_Component:
   - component: {fileID: 599936534}
   - component: {fileID: 599936535}
-  m_Layer: 0
+  - component: {fileID: 599936537}
+  - component: {fileID: 599936536}
+  m_Layer: 7
   m_Name: Red Base Elevator (In)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4666,6 +4668,67 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &599936536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599936533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb5dadfb707f6b418a9878a9353dc4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedElevator: {fileID: 719579664}
+  playerUsingElevator: {fileID: 0}
+  teamIdentity: 0
+  elevatorDelay: 0.5
+--- !u!61 &599936537
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599936533}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &622786122
 GameObject:
   m_ObjectHideFlags: 0
@@ -5048,7 +5111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 641592596}
   - component: {fileID: 641592597}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Green Base Elevator (Out)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5769,7 +5832,7 @@ GameObject:
   m_Component:
   - component: {fileID: 719579665}
   - component: {fileID: 719579666}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Red Base Elevator (Out)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11236,7 +11299,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 0, a: 1}
   m_FlipX: 0
@@ -11994,7 +12057,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1517362878}
   - component: {fileID: 1517362879}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Blue Base Elevator (In)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12767,7 +12830,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1602725879}
   - component: {fileID: 1602725880}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Blue Base Elevator (Out)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12851,6 +12914,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1618565990}
   - component: {fileID: 1618565991}
+  - component: {fileID: 1618565992}
   m_Layer: 0
   m_Name: Red Base Money Dropper
   m_TagString: Untagged
@@ -12926,6 +12990,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1618565992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618565989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c5de86ff7f221f4996f42acc2b10f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinPrefab: {fileID: 1643934315533340132, guid: 0c1158235fea3214a934eb2cf75f2a44, type: 3}
+  moneyDropperChute: {fileID: 686023514}
+  moneyDispenseRate: 2
 --- !u!1 &1643853200
 GameObject:
   m_ObjectHideFlags: 0
@@ -14174,7 +14253,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -14621,7 +14700,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 1, a: 1}
   m_FlipX: 0
@@ -15104,7 +15183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1992208662}
   - component: {fileID: 1992208663}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Yellow Base Elevator (Out)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16561,7 +16640,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 2a24f0476b49fb24e97731e41c039134, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
