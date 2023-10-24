@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 3152244068309512825}
   - component: {fileID: 3396260523170779346}
   - component: {fileID: 31602577888359653}
+  - component: {fileID: 1544874905877248907}
+  - component: {fileID: 7606410806420006520}
+  - component: {fileID: 7531299113195672808}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -148,3 +151,45 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1544874905877248907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643934315533340132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abeb7d78a65188b4e8345ba3ed531d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 7606410806420006520}
+  stackSize: 0
+--- !u!114 &7606410806420006520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643934315533340132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47003a4ddc0ec5d449ab40f82f0b182a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 1
+  itemDisplayName: Coin
+  icon: {fileID: 21300000, guid: 200b11b822ca3a24d98000b954a45a62, type: 3}
+  itemPrefab: {fileID: 1643934315533340132}
+--- !u!114 &7531299113195672808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643934315533340132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaaca1b8c31717842be1bfaca7eef416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
