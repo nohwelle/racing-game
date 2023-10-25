@@ -1,15 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+[Serializable]
+public class Item
 {
-    public ItemData data;
+    public ItemData itemData;
     public int stackSize;
 
-    public Item(ItemData source)
+    public Item(ItemData item)
     {
-        data = source;
+        itemData = item;
         AddToStack();
     }
 

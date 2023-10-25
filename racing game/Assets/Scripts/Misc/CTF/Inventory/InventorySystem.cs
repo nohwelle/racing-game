@@ -1,43 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventorySystem : MonoBehaviour
 {
-    private Dictionary<ItemData, Item> itemDictionary;
-    public List<Item> inventory;
-    public List<InventorySlot> inventorySlots;
+    public List<Item> inventory = new();
+    public List<InventorySlot> inventorySlots = new();
+    private Dictionary<ItemData, Item> itemDictionary = new();
 
     public static InventorySystem Instance;
 
     private void Awake()
     {
         Instance = this;
-        inventory = new();
-        itemDictionary = new();
     }
 
-    public void Add(ItemData referenceData)
+    private void OnEnable()
     {
-        // if the item is already logged in the inventory dict, add to the item's stack amount rather than logging it again, otherwise log it
-        if (itemDictionary.TryGetValue(referenceData, out Item value))
+        ItemObject.OnItemCollected += Add;
+    }
+
+    private void OnDisable()
+    {
+        ItemObject.OnItemCollected -= Add;
+    }
+
+    public void Add(ItemData itemData)
+    {
+        foreach (InventorySlot slot in inventorySlots)
         {
-            value.AddToStack();
-        }
-        else
-        {
-            // look for first available inventory slot to add new item to
-            foreach (InventorySlot slot in inventorySlots)
+            if (itemDictionary.TryGetValue(itemData, out Item item))
             {
-                if (!slot.containsItem)
+                if (slot.itemObject.activeInHierarchy && slot.itemObject.GetComponent<ItemUI>().itemData == itemData)
                 {
-                    Item newItem = new(referenceData);
-                    newItem.AddComponent<ItemUI>();
+                    item.AddToStack();
+
+                    print($"{item.itemData.itemName}'s total stack is now: {item.stackSize}!");
+
+                    if (item.stackSize > 1)
+                    {
+                        slot.itemObject.GetComponent<ItemUI>().itemStackSizeText.text = item.stackSize.ToString();
+                    }
+
+                    break;
+                }
+            }
+            else
+            {
+                if (!slot.itemObject.activeInHierarchy)
+                {
+                    Item newItem = new(itemData);
                     inventory.Add(newItem);
-                    itemDictionary.Add(referenceData, newItem);
-                    InventorySlot.Instance.Set(newItem);
+                    itemDictionary.Add(itemData, newItem);
+
+                    print($"{itemData.itemName} was added to {slot.name}!");
+
+                    // enable slot's child and give it the new item's data
+                    slot.itemObject.SetActive(true);
+                    slot.itemObject.GetComponent<ItemUI>().itemData = itemData;
 
                     break;
                 }
@@ -45,18 +66,16 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void Remove(ItemData referenceData)
+    public void Remove(ItemData itemData)
     {
-        // if the item is already logged in the inventory dict, remove from the item's stack size, otherwise remove the item entry
-        if (itemDictionary.TryGetValue(referenceData, out Item value))
+        if (itemDictionary.TryGetValue(itemData, out Item item))
         {
-            value.RemoveFromStack();
-            InventorySlot.Instance.Get(value);
+            item.RemoveFromStack();
 
-            if (value.stackSize == 0)
+            if (item.stackSize == 0)
             {
-                inventory.Remove(value);
-                itemDictionary.Remove(referenceData);
+                inventory.Remove(item);
+                itemDictionary.Remove(itemData);
             }
         }
     }

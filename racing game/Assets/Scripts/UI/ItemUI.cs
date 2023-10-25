@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    Image image;
     [HideInInspector] public Transform parentAfterDrag;
-
-    private void Awake()
-    {
-        image.sprite = GetComponent<SpriteRenderer>().sprite;
-    }
+    public Image image;
+    public TMP_Text itemStackSizeText;
+    public ItemData itemData;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (GetComponent<Item>().stackSize > 1)
-        {
-            parentAfterDrag = transform;
-        }
-
         // set parent to root obj so item can be seen on top of inventory UI & place self at bottom of local hierarchy
+        parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
@@ -44,8 +38,20 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         else
         {
             // remove item (self) from inventory system & display
-            InventorySystem.Instance.Remove(GetComponent<Item>().data);
             Destroy(gameObject);
+        }
+    }
+
+    private void Update()
+    {
+        if (itemData && !image.sprite)
+        {
+            image.sprite = itemData.itemSprite;
+        }
+
+        if (!itemData)
+        {
+            image.sprite = null;
         }
     }
 }

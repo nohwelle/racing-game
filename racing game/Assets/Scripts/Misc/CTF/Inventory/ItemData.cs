@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemData : MonoBehaviour
+[CreateAssetMenu]
+public class ItemData : ScriptableObject
 {
     public string itemID;
-    public string itemDisplayName;
-    public Sprite icon;
+    public string itemName;
+    public string itemDescription;
+    public Sprite itemSprite;
     public GameObject itemPrefab;
-
-    private void Awake()
-    {
-        itemDisplayName = name;
-        icon = GetComponent<SpriteRenderer>().sprite;
-        itemPrefab = gameObject;
-    }
 }
