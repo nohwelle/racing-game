@@ -4,18 +4,48 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using static UnityEditor.Progress;
 
 public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [HideInInspector] public Transform parentAfterDrag;
+    public Transform parentAfterDrag;
+    Transform lastParentAfterDrag;
     public Image image;
     public TMP_Text itemStackSizeText;
     public ItemData itemData;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        // move one copy of item in stack on left-click
+        if (Input.GetMouseButton(0)) // left
+        {
+            // mess with stack counts
+            if (InventorySystem.Instance.itemDictionary.TryGetValue(itemData, out Item itemStack))
+            {
+                itemStack.RemoveFromStack();
+                
+                if (itemStack.stackSize > 1)
+                {
+                    itemStackSizeText.text = itemStack.stackSize.ToString();
+                }
+                else
+                {
+                    itemStackSizeText.text = "";
+                }
+
+                if (itemStack.stackSize > 0)
+                {
+                    // make duplicate item UI object to stay in slot that item was removed from
+                    GameObject itemClone = gameObject;
+                    Instantiate(itemClone, transform.parent);
+                }
+            }
+        }
+
+
         // set parent to root obj so item can be seen on top of inventory UI & place self at bottom of local hierarchy
         parentAfterDrag = transform.parent;
+        lastParentAfterDrag = parentAfterDrag;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
@@ -29,17 +59,9 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (parentAfterDrag)
-        {
-            // get placed in new slot
-            transform.SetParent(parentAfterDrag);
-            image.raycastTarget = true;
-        }
-        else
-        {
-            // remove item (self) from inventory system & display
-            Destroy(gameObject);
-        }
+        // get placed in new slot
+        transform.SetParent(parentAfterDrag);
+        image.raycastTarget = true;
     }
 
     private void Update()
@@ -47,11 +69,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         if (itemData && !image.sprite)
         {
             image.sprite = itemData.itemSprite;
-        }
-
-        if (!itemData)
-        {
-            image.sprite = null;
         }
     }
 }

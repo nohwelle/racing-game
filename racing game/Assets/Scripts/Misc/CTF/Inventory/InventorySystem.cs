@@ -7,7 +7,7 @@ public class InventorySystem : MonoBehaviour
 {
     public List<Item> inventory = new();
     public List<InventorySlot> inventorySlots = new();
-    private Dictionary<ItemData, Item> itemDictionary = new();
+    public Dictionary<ItemData, Item> itemDictionary = new();
 
     public static InventorySystem Instance;
 
@@ -32,7 +32,7 @@ public class InventorySystem : MonoBehaviour
         {
             if (itemDictionary.TryGetValue(itemData, out Item item))
             {
-                if (slot.itemObject.activeInHierarchy && slot.itemObject.GetComponent<ItemUI>().itemData == itemData)
+                if (slot.itemObject && slot.itemObject.activeInHierarchy && slot.itemObject.GetComponent<ItemUI>().itemData == itemData)
                 {
                     item.AddToStack();
 
@@ -48,7 +48,7 @@ public class InventorySystem : MonoBehaviour
             }
             else
             {
-                if (!slot.itemObject.activeInHierarchy)
+                if (slot.itemObject && !slot.itemObject.activeInHierarchy)
                 {
                     Item newItem = new(itemData);
                     inventory.Add(newItem);
@@ -68,14 +68,17 @@ public class InventorySystem : MonoBehaviour
 
     public void Remove(ItemData itemData)
     {
-        if (itemDictionary.TryGetValue(itemData, out Item item))
+        foreach (InventorySlot slot in inventorySlots)
         {
-            item.RemoveFromStack();
-
-            if (item.stackSize == 0)
+            if (itemDictionary.TryGetValue(itemData, out Item item))
             {
-                inventory.Remove(item);
-                itemDictionary.Remove(itemData);
+                item.RemoveFromStack();
+
+                if (item.stackSize == 0)
+                {
+                    inventory.Remove(item);
+                    itemDictionary.Remove(itemData);
+                }
             }
         }
     }
