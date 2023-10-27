@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using Image = UnityEngine.UI.Image;
 using static UnityEditor.Progress;
 
 public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Transform parentAfterDrag;
-    Transform lastParentAfterDrag;
     public Image image;
     public TMP_Text itemStackSizeText;
     public ItemData itemData;
@@ -22,22 +22,25 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             // mess with stack counts
             if (InventorySystem.Instance.itemDictionary.TryGetValue(itemData, out Item itemStack))
             {
-                itemStack.RemoveFromStack();
-                
                 if (itemStack.stackSize > 1)
                 {
+                    itemStack.RemoveFromStack();
                     itemStackSizeText.text = itemStack.stackSize.ToString();
-                }
-                else
-                {
-                    itemStackSizeText.text = "";
+                    print($"{itemStack.itemData.itemName}'s total stack is now: {itemStack.stackSize}!");
+
+                    // make duplicate item UI object to stay in slot that item was removed from
+                    GameObject itemClone = Instantiate(gameObject, transform.parent);
+                    itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
+
+                    // set removed item's stack size to one, since it's been removed separately
+                    // -- ISSUE: itemStack affects all itemDict values of itemData, so multiple copies of the same item get affected by this
+                    itemStack.stackSize = 1;
                 }
 
-                if (itemStack.stackSize > 0)
+                if (itemStack.stackSize == 1)
                 {
-                    // make duplicate item UI object to stay in slot that item was removed from
-                    GameObject itemClone = gameObject;
-                    Instantiate(itemClone, transform.parent);
+                    itemStackSizeText.text = "";
+                    print($"{itemStack.itemData.itemName}'s total stack is 1!");
                 }
             }
         }
@@ -45,7 +48,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
         // set parent to root obj so item can be seen on top of inventory UI & place self at bottom of local hierarchy
         parentAfterDrag = transform.parent;
-        lastParentAfterDrag = parentAfterDrag;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
@@ -59,9 +61,31 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // get placed in new slot
-        transform.SetParent(parentAfterDrag);
-        image.raycastTarget = true;
+        if (parentAfterDrag.GetComponent<InventorySlot>().hasItemDroppedInto)
+        {
+            // get placed in new slot
+            transform.SetParent(parentAfterDrag);
+            image.raycastTarget = true;
+
+            parentAfterDrag.GetComponent<InventorySlot>().hasItemDroppedInto = false;
+        }
+        else
+        {
+            if (InventorySystem.Instance.itemDictionary.TryGetValue(itemData, out Item itemStack))
+            {
+                // drop however many items were in the stack
+                // figure out whose inventory we're actually in
+                if (InventorySystem.Instance.inventorySlots.Contains(parentAfterDrag.GetComponent<InventorySlot>()))
+                {
+                    print(InventorySystem.Instance.transform.root);
+                    for (var i = 0; i < itemStack.stackSize; i++)
+                    {
+                        GameObject droppedItem = itemData.itemPrefab;
+                        Instantiate(droppedItem, InventorySystem.Instance.transform.root);
+                    }
+                }
+            }
+        }
     }
 
     private void Update()
@@ -69,6 +93,11 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         if (itemData && !image.sprite)
         {
             image.sprite = itemData.itemSprite;
+        }
+
+        if (!itemData && image.sprite)
+        {
+            image.sprite = null;
         }
     }
 }

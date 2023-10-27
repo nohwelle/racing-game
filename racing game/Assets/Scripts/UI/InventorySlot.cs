@@ -6,23 +6,36 @@ using UnityEngine.EventSystems;
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
     public GameObject itemObject;
+    public bool hasItemDroppedInto;
 
     public void OnDrop(PointerEventData eventData)
     {
+        hasItemDroppedInto = true;
+
         // get info about the new thing put into this slot
         GameObject dropped = eventData.pointerDrag;
         ItemUI draggableItem = dropped.GetComponent<ItemUI>();
 
+        // if two items involved in interaction are the same, combine them
+        if (transform.childCount != 0 && transform.GetChild(0).GetComponent<ItemUI>().itemData == draggableItem.itemData)
+        {
+            print("Items moved in inventory are the same! Should be combined!");
+            // set current item in slot to empty
+            transform.GetChild(0).GetComponent<ItemUI>().itemData = null;
+            transform.GetChild(0).gameObject.SetActive(false);
+
+            // add to new item's stack; pretend like things are working fine
+            if (InventorySystem.Instance.itemDictionary.TryGetValue(draggableItem.GetComponent<ItemUI>().itemData, out Item itemStack))
+            {
+                itemStack.AddToStack();
+                draggableItem.itemStackSizeText.text = itemStack.stackSize.ToString();
+            }
+        }
+
         // if old slot contains a real item, destroy empty from this slot
-        if (draggableItem.parentAfterDrag.childCount > 0 && draggableItem.parentAfterDrag.GetChild(0).gameObject.activeInHierarchy)
+        if (draggableItem.parentAfterDrag.childCount != 0 && draggableItem.parentAfterDrag.GetChild(0).gameObject.activeInHierarchy)
         {
             Destroy(transform.GetChild(0).gameObject);
-
-            // if real item is the same as item being moved, turn one instance into an empty and add to other's stack
-            if (draggableItem.itemData == itemObject.GetComponent<ItemUI>().itemData)
-            {
-
-            }
         }
 
         // swap current item (empty)'s position with position of new item

@@ -8,6 +8,7 @@ public class ItemObject : MonoBehaviour
     public static event HandleItemCollected OnItemCollected;
     public delegate void HandleItemCollected(ItemData itemData);
     public ItemData itemData;
+    Collider2D itemCollider;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -17,5 +18,12 @@ public class ItemObject : MonoBehaviour
             OnItemCollected?.Invoke(itemData);
             Destroy(gameObject);
         }
+    }
+
+    public IEnumerator DisableCollisionOnDrop()
+    {
+        //itemCollider.
+
+        yield break;
     }
 }
