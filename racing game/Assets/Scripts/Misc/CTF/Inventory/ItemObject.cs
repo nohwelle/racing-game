@@ -8,11 +8,18 @@ public class ItemObject : MonoBehaviour
     public static event HandleItemCollected OnItemCollected;
     public delegate void HandleItemCollected(ItemData itemData);
     public ItemData itemData;
-    Collider2D itemCollider;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public float allowPickUpDelayTime = 1.0f;
+    bool canBePickedUp;
+
+    private void OnEnable()
     {
-        if (collision.gameObject.GetComponent<CTFRunner>())
+        StartCoroutine(DisablePickUpOnDrop());
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<CTFRunner>() && canBePickedUp)
         {
             // do collection stuff (i honestly don't know)
             OnItemCollected?.Invoke(itemData);
@@ -20,9 +27,12 @@ public class ItemObject : MonoBehaviour
         }
     }
 
-    public IEnumerator DisableCollisionOnDrop()
+    public IEnumerator DisablePickUpOnDrop()
     {
-        //itemCollider.
+        yield return new WaitForSeconds(allowPickUpDelayTime);
+
+        // -- NOTE: this doesn't need to be set to false at any point since it resets to false when instantiated and gets destroyed on pickup
+        canBePickedUp = true;
 
         yield break;
     }

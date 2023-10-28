@@ -19,7 +19,7 @@ public class CTFAIMovement : MonoBehaviour
     public Vector2 slideSize;
     public Vector2 slideOffset;
 
-    bool isFacingLeft;
+    [HideInInspector] public bool isFacingLeft;
     public float horizontalInputSmoothing = 0.01625f; // how much to increase/decrease horizontal input by each frame
     float horizontalInput;
     float lastHorizontalInput;

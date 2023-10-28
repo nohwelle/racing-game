@@ -16,4 +16,4 @@ MonoBehaviour:
   itemName: ITEM_TEST
   itemDescription: Hey man, don't tell anyone about this.
   itemSprite: {fileID: 0}
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 2453601014377777133, guid: a89874cd3c6e2944db89e39faa201911, type: 3}

@@ -20,7 +20,7 @@ public class CTFPlayerMovement : MonoBehaviour
     public Vector2 slideSize;
     public Vector2 slideOffset;
 
-    bool isFacingLeft;
+    [HideInInspector] public bool isFacingLeft;
     public bool isFacingLeftOnInitialJump;
     float horizontalInput;
     float lastHorizontalInput;

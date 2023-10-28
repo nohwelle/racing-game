@@ -60,6 +60,12 @@ public class InventorySystem : MonoBehaviour
                     slot.itemObject.SetActive(true);
                     slot.itemObject.GetComponent<ItemUI>().itemData = itemData;
 
+                    // if an empty slot cloned from a dropped item is filled, re-enable its raycast target
+                    if (!slot.itemObject.GetComponent<ItemUI>().image.raycastTarget)
+                    {
+                        slot.itemObject.GetComponent<ItemUI>().image.raycastTarget = true;
+                    }
+
                     break;
                 }
             }
@@ -74,11 +80,8 @@ public class InventorySystem : MonoBehaviour
             {
                 item.RemoveFromStack();
 
-                if (item.stackSize == 0)
-                {
-                    inventory.Remove(item);
-                    itemDictionary.Remove(itemData);
-                }
+                inventory.Remove(item);
+                itemDictionary.Remove(itemData);
             }
         }
     }

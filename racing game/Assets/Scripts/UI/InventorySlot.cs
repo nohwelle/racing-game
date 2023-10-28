@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
     public GameObject itemObject;
-    public bool hasItemDroppedInto;
+    public bool hasItemDroppedInto; // a check for if the itemUI object was actually placed in a slot or dropped
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -20,6 +20,10 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         if (transform.childCount != 0 && transform.GetChild(0).GetComponent<ItemUI>().itemData == draggableItem.itemData)
         {
             print("Items moved in inventory are the same! Should be combined!");
+
+
+            // -- BUG: if an item is taken out of inventory slot, then put back in, stacking behaves incorrectly
+
             // set current item in slot to empty
             transform.GetChild(0).GetComponent<ItemUI>().itemData = null;
             transform.GetChild(0).gameObject.SetActive(false);
