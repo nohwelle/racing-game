@@ -6200,7 +6200,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 830086201}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1782105025}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
 --- !u!1 &716594748
@@ -9543,7 +9543,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1581084141}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1924429093}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
 --- !u!1 &1000909609
@@ -11418,7 +11418,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 835353376}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1392369931}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
 --- !u!1 &1207251619
@@ -16931,7 +16931,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1503978070}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1638947990}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
 --- !u!1 &1944096654
@@ -19211,7 +19211,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 739916804}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1377624854}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
 --- !u!1660057539 &9223372036854775807

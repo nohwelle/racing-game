@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using Image = UnityEngine.UI.Image;
-using static UnityEditor.Progress;
 
 public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -13,8 +12,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     public Image image;
     public TMP_Text itemStackSizeText;
     public ItemData itemData;
-
-    public bool isItemStackUI;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -29,28 +26,20 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
                 // remove 1 from stack count and create new instance of item UI to represent the remaining stack
                 if (itemStack.stackSize > 1)
                 {
-                    // -- BUG: leftover item stack does not keep count of items correctly, gets stack size set to 1 despite check put in place
-
                     itemStack.RemoveFromStack();
                     itemStackSizeText.text = itemStack.stackSize.ToString();
 
                     // make duplicate item UI object to stay in slot that item was removed from
                     GameObject itemClone = Instantiate(gameObject, transform.parent);
                     itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
-                    itemClone.GetComponent<ItemUI>().isItemStackUI = true;
-
-                    // set removed item's stack size to one
-                    if (!isItemStackUI)
-                    {
-                        print($"Item removed from stack! Remaining {itemStack.itemData.itemName} stack is now: {itemStack.stackSize}!");
-                        itemStack.stackSize = 1;
-                    }
 
                     // if there is only one item left in the stack after an item was removed, clear stack text
                     if (itemStack.stackSize == 1)
                     {
                         itemStackSizeText.text = "";
                     }
+
+                    print($"Item removed from stack! Remaining {itemStack.itemData.itemName} stack is now: {itemStack.stackSize}!");
                 }
             }
         }
