@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class InventorySystem : MonoBehaviour
 {
-    public List<Item> inventory = new();
     public List<InventorySlot> inventorySlots = new();
-    public Dictionary<ItemData, Item> itemDictionary = new();
 
     public static InventorySystem Instance;
 
@@ -30,32 +28,17 @@ public class InventorySystem : MonoBehaviour
     {
         foreach (InventorySlot slot in inventorySlots)
         {
-            if (itemDictionary.TryGetValue(itemData, out Item item))
+            if (slot.itemObject && slot.itemObject.activeInHierarchy && slot.itemObject.GetComponent<ItemUI>().itemData == itemData)
             {
-                if (slot.itemObject && slot.itemObject.activeInHierarchy && slot.itemObject.GetComponent<ItemUI>().itemData == itemData)
-                {
-                    item.AddToStack();
+                slot.itemObject.GetComponent<ItemUI>().itemStackSize++;
+                slot.itemObject.GetComponent<ItemUI>().itemStackSizeText.text = slot.itemObject.GetComponent<ItemUI>().itemStackSize.ToString();
 
-                    print($"{item.itemData.itemName}'s total stack is now: {item.stackSize}!");
-
-                    if (item.stackSize > 1)
-                    {
-                        slot.itemObject.GetComponent<ItemUI>().itemStackSizeText.text = item.stackSize.ToString();
-                    }
-
-                    break;
-                }
+                break;
             }
             else
             {
                 if (slot.itemObject && !slot.itemObject.activeInHierarchy)
                 {
-                    Item newItem = new(itemData);
-                    inventory.Add(newItem);
-                    itemDictionary.Add(itemData, newItem);
-
-                    print($"{itemData.itemName} was added to {slot.name}!");
-
                     // enable slot's child and give it the new item's data
                     slot.itemObject.SetActive(true);
                     slot.itemObject.GetComponent<ItemUI>().itemData = itemData;
@@ -66,22 +49,10 @@ public class InventorySystem : MonoBehaviour
                         slot.itemObject.GetComponent<ItemUI>().image.raycastTarget = true;
                     }
 
+                    print($"{itemData.itemName} was added to {slot.name}!");
+
                     break;
                 }
-            }
-        }
-    }
-
-    public void Remove(ItemData itemData)
-    {
-        foreach (InventorySlot slot in inventorySlots)
-        {
-            if (itemDictionary.TryGetValue(itemData, out Item item))
-            {
-                item.RemoveFromStack();
-
-                inventory.Remove(item);
-                itemDictionary.Remove(itemData);
             }
         }
     }

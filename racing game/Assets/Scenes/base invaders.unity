@@ -3296,7 +3296,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f7f45ebe6808645b5e8771d938b2e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: []
   inventorySlots:
   - {fileID: 739916800}
   - {fileID: 439320403}
@@ -6197,7 +6196,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5770374743657131261, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 830086201}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
       insertIndex: 3
@@ -9540,7 +9539,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5770374743657131261, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 1581084141}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
       insertIndex: 3
@@ -11415,7 +11414,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5770374743657131261, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 835353376}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
       insertIndex: 3
@@ -16928,7 +16927,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5770374743657131261, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 1503978070}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
       insertIndex: 3
@@ -19208,7 +19207,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5770374743657131261, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 739916804}
     - targetCorrespondingSourceObject: {fileID: 7642121933537648993, guid: 1dd7f310f756e7c43bac7aed9b2d2caf, type: 3}
       insertIndex: 3
