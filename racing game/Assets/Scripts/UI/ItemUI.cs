@@ -70,6 +70,11 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             image.raycastTarget = true;
 
             parentAfterDrag.GetComponent<InventorySlot>().hasItemDroppedInto = false;
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                itemStackSize = 1;
+            }
         }
         else
         {
