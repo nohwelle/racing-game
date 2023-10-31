@@ -70,11 +70,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             image.raycastTarget = true;
 
             parentAfterDrag.GetComponent<InventorySlot>().hasItemDroppedInto = false;
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                itemStackSize = 1;
-            }
         }
         else
         {
@@ -98,22 +93,7 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
                         droppedItem.GetComponent<Rigidbody2D>().AddForce(new(50, 0), ForceMode2D.Impulse);
                     }
 
-                    // create empty item to replace dropped itemUI if dropping the only item left in a slot
-                    if (parentAfterDrag.childCount == 0)
-                    {
-                        GameObject itemClone = Instantiate(gameObject, transform.parent);
-                        itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
-                        itemClone.transform.SetParent(parentAfterDrag);
-                        parentAfterDrag.GetComponent<InventorySlot>().itemObject = itemClone;
-                        itemClone.GetComponent<ItemUI>().itemData = null;
-                        itemClone.GetComponent<ItemUI>().itemStackSize = 1;
-                        itemClone.SetActive(false);
-                    }
-                    else // if there are still items in the slot & stack, set slot's itemObject to remaining stack object
-                    {
-                        parentAfterDrag.GetComponent<InventorySlot>().itemObject = parentAfterDrag.GetChild(0).gameObject;
-                    }
-
+                    // KILL the itemUI
                     Destroy(gameObject);
                 }
             }
@@ -140,17 +120,9 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
                             droppedItem.GetComponent<Rigidbody2D>().AddForce(new(50, 0), ForceMode2D.Impulse);
                         }
 
-                        // create empty item to replace dropped itemUI after all items have been dropped
+                        // destroy itemUI after all items have been dropped
                         if (i == itemStackSize - 1)
                         {
-                            GameObject itemClone = Instantiate(gameObject, transform.parent);
-                            itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
-                            itemClone.transform.SetParent(parentAfterDrag);
-                            parentAfterDrag.GetComponent<InventorySlot>().itemObject = itemClone;
-                            itemClone.GetComponent<ItemUI>().itemData = null;
-                            itemClone.GetComponent<ItemUI>().itemStackSize = 1;
-                            itemClone.SetActive(false);
-
                             Destroy(gameObject);
                         }
                     }
