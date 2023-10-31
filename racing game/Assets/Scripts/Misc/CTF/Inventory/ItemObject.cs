@@ -21,6 +21,8 @@ public class ItemObject : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<CTFRunner>() && canBePickedUp)
         {
+            // add check to see if any inventory slots are vacant
+
             // do collection stuff (i honestly don't know)
             OnItemCollected?.Invoke(itemData);
             Destroy(gameObject);

@@ -80,6 +80,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
             itemClone.GetComponent<ItemUI>().itemData = null;
             itemClone.GetComponent<ItemUI>().itemStackSize = 1;
+            itemClone.GetComponent<ItemUI>().itemStackSizeText.text = "";
             itemClone.SetActive(false);
             itemClone.transform.SetParent(transform);
 
