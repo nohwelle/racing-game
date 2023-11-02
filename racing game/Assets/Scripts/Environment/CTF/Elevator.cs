@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Elevator : MonoBehaviour
 {
     public GameObject linkedElevator;
     public GameObject playerUsingElevator;
+    public TMP_Text useElevatorText;
+    public Transform useElevatorTextPosition;
 
     public float teamIdentity;
     public float elevatorDelay;
+
+    private void Start()
+    {
+        useElevatorText.transform.position = useElevatorTextPosition.position;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -17,14 +25,20 @@ public class Elevator : MonoBehaviour
             // play elevator opening animation
 
             playerUsingElevator = collision.gameObject;
+            useElevatorText.text = "''<USE>'' TO USE ELEVATOR";
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        playerUsingElevator = null;
-    }
+        if (collision.gameObject.GetComponent<CTFRunner>() && collision.gameObject.GetComponent<CTFRunner>().teamIdentity == teamIdentity)
+        {
+            // play elevator closing animation
 
+            playerUsingElevator = null;
+            useElevatorText.text = "";
+        }
+    }
 
     private void Update()
     {

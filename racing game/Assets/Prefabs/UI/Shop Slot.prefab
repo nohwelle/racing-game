@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5358391180446801886}
   - component: {fileID: 978296145276577826}
   - component: {fileID: 2020741319477231926}
-  - component: {fileID: 6678195921527921764}
   - component: {fileID: 269822904153582573}
-  - component: {fileID: 3924164750004692037}
+  - component: {fileID: 1416055395997945498}
+  - component: {fileID: 5769535511581800084}
   m_Layer: 5
   m_Name: Shop Slot
   m_TagString: Untagged
@@ -79,7 +79,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6678195921527921764
+--- !u!114 &269822904153582573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770374743657131261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 32, y: 32}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 0
+  m_ConstraintCount: 2
+--- !u!114 &1416055395997945498
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +147,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &269822904153582573
+--- !u!114 &5769535511581800084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,35 +156,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5770374743657131261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c11bc1941082114591479eb9a4f059c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 32, y: 32}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
---- !u!114 &3924164750004692037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5770374743657131261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 637319cd5aef78746ae98f0be526d76e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemObject: {fileID: 7642121933537648993}
-  hasItemDroppedInto: 0
+  itemStackSize: 1
 --- !u!1 &7047675319102556900
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,14 +305,14 @@ GameObject:
   - component: {fileID: 1578796205634655826}
   - component: {fileID: 6461449464177274096}
   - component: {fileID: 8344612345848215706}
-  - component: {fileID: 3126815045309532724}
+  - component: {fileID: 329739819043480694}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1578796205634655826
 RectTransform:
   m_ObjectHideFlags: 0
@@ -329,10 +328,10 @@ RectTransform:
   - {fileID: 3009825441242758072}
   m_Father: {fileID: 5358391180446801886}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 32, y: 32}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6461449464177274096
 CanvasRenderer:
@@ -372,7 +371,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3126815045309532724
+--- !u!114 &329739819043480694
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -381,11 +380,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7642121933537648993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97958d5a19ff9cb4fbbb11cbc0c9432c, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c6039bafe5c0974c86ec5cd2bf56318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentAfterDrag: {fileID: 0}
   image: {fileID: 8344612345848215706}
   itemStackSizeText: {fileID: 3630771972728095440}
   itemData: {fileID: 0}
   itemStackSize: 1
+  itemCost: 0
