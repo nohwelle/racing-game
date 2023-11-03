@@ -26,25 +26,14 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                 // add to new item's stack; pretend like things are working fine
                 draggableItem.itemStackSize += itemObject.GetComponent<ItemUI>().itemStackSize;
                 draggableItem.itemStackSizeText.text = draggableItem.itemStackSize.ToString();
-                print($"{draggableItem.name}'s stack size is now: {draggableItem.itemStackSize}!");
 
-                // set current item in slot to empty; it will be overwritten by incoming item
+                // destory current item
                 Destroy(transform.GetChild(0).gameObject);
-                /*transform.GetChild(0).GetComponent<ItemUI>().itemData = null;
-                transform.GetChild(0).gameObject.SetActive(false);*/
 
-                print("Items moved in inventory are the same! Should be combined!");
-
-                if (draggableItem.parentAfterDrag.childCount > 0 && draggableItem.parentAfterDrag.GetChild(0).GetComponent<ItemUI>().itemData != itemObject.GetComponent<ItemUI>().itemData)
+                // update total coin count in inventory during shop interactions
+                if (draggableItem.itemData.itemID == 1)
                 {
-                    if (!draggableItem.parentAfterDrag.GetChild(0).gameObject.activeInHierarchy)
-                    {
-                        print($"{draggableItem.parentAfterDrag.name} still contains an empty!");
-                    }
-                    else
-                    {
-                        print($"{draggableItem.parentAfterDrag.name} still contains a different item!");
-                    }
+                    ShopSlotButton.Instance.CheckInventory();
                 }
             }
             else
@@ -52,15 +41,16 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                 if (!transform.GetChild(0).gameObject.activeInHierarchy)
                 {
                     Destroy(transform.GetChild(0).gameObject);
-
-                    print($"Destroying {gameObject.name}'s empty for a new incoming item!");
                 }
 
                 transform.GetChild(0).SetParent(draggableItem.parentAfterDrag);
                 draggableItem.transform.SetParent(transform);
 
-                print($"Swapping {gameObject.name}'s item for a new incoming item!");
-
+                // update total coin count in inventory during shop interactions
+                if (draggableItem.itemData.itemID == 1)
+                {
+                    ShopSlotButton.Instance.CheckInventory();
+                }
             }
         }
 
@@ -83,8 +73,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             itemClone.GetComponent<ItemUI>().itemStackSizeText.text = "";
             itemClone.SetActive(false);
             itemClone.transform.SetParent(transform);
-
-            print($"Filling in {gameObject.name} with a new empty!");
         }
 
         if (transform.childCount > 0)

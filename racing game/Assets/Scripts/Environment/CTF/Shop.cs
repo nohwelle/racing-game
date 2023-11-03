@@ -29,6 +29,7 @@ public class Shop : MonoBehaviour
         {
             shopUI.SetActive(true);
             isShopUIOpen = true;
+            ShopSlotButton.Instance.CheckInventory();
         }
 
         if (isShopUIOpen && Input.GetKeyDown(KeyCode.Escape))

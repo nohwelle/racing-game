@@ -20,8 +20,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         // move one copy of item in stack on left-click
         if (Input.GetMouseButton(0)) // left
         {
-            print("Item is being dragged!");
-
             // mess with stack counts
             if (itemStackSize > 1)
             {
@@ -41,8 +39,6 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
                 // set stack size for self after separating from the full stack
                 itemStackSize = 1;
                 itemStackSizeText.text = "";
-
-                print($"Item removed from stack! Remaining {itemData.itemName} stack is now: {itemStackSize}!");
             }
         }
 
@@ -136,6 +132,17 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         if (itemData && !image.sprite)
         {
             image.sprite = itemData.itemSprite;
+        }
+
+        // -- specifically for coins: if buying from shop and # of coins becomes exactly 0, destroy active coin itemUI and replace with empty
+        if (itemStackSize == 0)
+        {
+            GameObject itemClone = Instantiate(gameObject, transform.parent);
+            itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
+            itemClone.GetComponent<ItemUI>().itemStackSize = 1;
+            itemStackSizeText.text = "";
+
+            Destroy(gameObject);
         }
     }
 
