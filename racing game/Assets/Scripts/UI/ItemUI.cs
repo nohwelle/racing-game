@@ -135,12 +135,14 @@ public class ItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         }
 
         // -- specifically for coins: if buying from shop and # of coins becomes exactly 0, destroy active coin itemUI and replace with empty
-        if (itemStackSize == 0)
+        if (itemStackSize <= 0)
         {
             GameObject itemClone = Instantiate(gameObject, transform.parent);
             itemClone.name = itemClone.name.Replace("(Clone)", "").Trim();
             itemClone.GetComponent<ItemUI>().itemStackSize = 1;
-            itemStackSizeText.text = "";
+            itemClone.GetComponent<ItemUI>().itemStackSizeText.text = "";
+            itemClone.GetComponent<ItemUI>().itemData = null;
+            itemClone.SetActive(false);
 
             Destroy(gameObject);
         }

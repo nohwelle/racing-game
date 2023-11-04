@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
+    Button button;
+
     public GameObject itemObject;
     public bool hasItemDroppedInto; // a check for if the itemUI object was actually placed in a slot or dropped
+    public bool isSelected;
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -29,12 +31,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
                 // destory current item
                 Destroy(transform.GetChild(0).gameObject);
-
-                // update total coin count in inventory during shop interactions
-                if (draggableItem.itemData.itemID == 1)
-                {
-                    ShopSlotButton.Instance.CheckInventory();
-                }
             }
             else
             {
@@ -45,12 +41,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
                 transform.GetChild(0).SetParent(draggableItem.parentAfterDrag);
                 draggableItem.transform.SetParent(transform);
-
-                // update total coin count in inventory during shop interactions
-                if (draggableItem.itemData.itemID == 1)
-                {
-                    ShopSlotButton.Instance.CheckInventory();
-                }
             }
         }
 
@@ -60,6 +50,16 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
         itemObject = draggableItem.gameObject;
         draggableItem.parentAfterDrag = transform;
+    }
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+    }
+
+    private void Start()
+    {
+        button.onClick.AddListener(SelectSlot);
     }
 
     private void Update()
@@ -79,5 +79,11 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             itemObject = transform.GetChild(0).gameObject;
         }
+    }
+
+    void SelectSlot()
+    {
+        // used for selecting an item from inventory to use/hold
+
     }
 }

@@ -5751,6 +5751,7 @@ MonoBehaviour:
   openShopText: {fileID: 945763568}
   openShopTextPosition: {fileID: 1057455506}
   shopUI: {fileID: 981345064}
+  isShopUIOpen: 0
 --- !u!61 &522748760
 BoxCollider2D:
   m_ObjectHideFlags: 0

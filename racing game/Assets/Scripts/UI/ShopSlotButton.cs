@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ public class ShopSlotButton : MonoBehaviour
 {
     Button button;
 
-    public float itemStackSize = 1; // number of items in any given stack, different count for each instance of ItemUI objects
+    bool itemWasPurchased;
 
     public static ShopSlotButton Instance;
 
@@ -23,8 +24,6 @@ public class ShopSlotButton : MonoBehaviour
         button.interactable = false;
     }
 
-    // -- VERY LIKELY THAT ALL vvv IS BROKEN LOL
-
     public void CheckInventory()
     {
         float totalCoinsInSlots = 0;
@@ -39,14 +38,17 @@ public class ShopSlotButton : MonoBehaviour
             }
         }
 
-        // if it's less than the cost of this slot's item, disable the button
-        if (totalCoinsInSlots >= transform.GetChild(0).GetComponent<ShopItemUI>().itemCost)
+        foreach (ShopSlotButton shopItem in FindObjectsOfType<ShopSlotButton>())
         {
-            button.interactable = true;
-        }
-        else
-        {
-            button.interactable = false;
+            // if it's less than the cost of this slot's item, disable the button
+            if (totalCoinsInSlots >= shopItem.transform.GetChild(0).GetComponent<ShopItemUI>().itemCost)
+            {
+                shopItem.button.interactable = true;
+            }
+            else
+            {
+                shopItem.button.interactable = false;
+            }
         }
     }
 
@@ -54,6 +56,7 @@ public class ShopSlotButton : MonoBehaviour
     {
         List<InventorySlot> slotsWithCoins = new();
         float totalCoinsInSlots = 0;
+        float itemCostRemainder = transform.GetChild(0).GetComponent<ShopItemUI>().itemCost;
 
         foreach (InventorySlot slot in InventorySystem.Instance.inventorySlots)
         {
@@ -66,16 +69,20 @@ public class ShopSlotButton : MonoBehaviour
                 // add amount of coins between the slots together
                 totalCoinsInSlots += slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize;
 
+                print($"{slot.name} detects " + totalCoinsInSlots + " coins in inventory!");
 
                 // if this inventory slot has more coins than / equal coins to the cost of this shop slot's item, let's buy it!
                 if (slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize >= transform.GetChild(0).GetComponent<ShopItemUI>().itemCost)
                 {
-                    // add item to inventory on click
-                    InventorySystem.Instance.Add(transform.GetChild(0).GetComponent<ShopItemUI>().itemData);
-
                     // deduct money from inventory slot
                     slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize -= transform.GetChild(0).GetComponent<ShopItemUI>().itemCost;
                     slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSizeText.text = slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize.ToString();
+
+                    // add item to inventory on click
+                    InventorySystem.Instance.Add(transform.GetChild(0).GetComponent<ShopItemUI>().itemData);
+
+                    itemWasPurchased = true;
+                    print($"Purchased {transform.GetChild(0).GetComponent<ShopItemUI>().itemData.itemName} for {transform.GetChild(0).GetComponent<ShopItemUI>().itemCost}!");
 
                     break;
                 }
@@ -83,26 +90,47 @@ public class ShopSlotButton : MonoBehaviour
         }
 
         // if a single slot does not have enough money in it to buy an item, but the total coins in all slots can, remove coins from slots in order until cost is covered
-        if (totalCoinsInSlots >= transform.GetChild(0).GetComponent<ShopItemUI>().itemCost)
+        if (totalCoinsInSlots >= transform.GetChild(0).GetComponent<ShopItemUI>().itemCost && !itemWasPurchased)
         {
-            float itemCostRemainder = transform.GetChild(0).GetComponent<ShopItemUI>().itemCost;
-
             foreach (InventorySlot slot in slotsWithCoins)
             {
+                // if a saved slot has (more than) enough coins to cover the cost, deduct money like normal
+                if (slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize - itemCostRemainder > 0)
+                {
+                    // do the opposite of above so itemCostRemainder = 0 and slot's coin coin is >= 1 by the end
+                    slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize -= itemCostRemainder;
+                    itemCostRemainder -= slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize - (slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize - itemCostRemainder);
+
+                    print(itemCostRemainder);
+                    print($"Cost of item remaining after coins were deducted from {slot.name}: " + itemCostRemainder);
+
+                    break;
+                }
+
                 // if a saved slot has too few coins in it to cover the cost, just pay off whatever amount it has
                 if (slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize - itemCostRemainder <= 0)
                 {
                     // -- EX. 3 - (5 - (5 - 3)) = 0
-                    slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize -= itemCostRemainder - (itemCostRemainder - slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize);
                     itemCostRemainder -= slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize;
-                }
+                    slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize -= itemCostRemainder - (itemCostRemainder - slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize);
 
-                // if a saved slot has (more than) enough coins to cover the cost, deduct money like normal
-                if (slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize - itemCostRemainder > 0)
-                {
-                    slot.transform.GetChild(0).GetComponent<ItemUI>().itemStackSize -= itemCostRemainder;
+                    print(itemCostRemainder);
+                    print($"Cost of item remaining after coins were deducted from {slot.name}: " + itemCostRemainder);
                 }
             }
+
+            if (itemCostRemainder == 0)
+            {
+                // -- NOTE: bought item will occupy "next" available slot because coins don't get destroyed before the bought item is added, so the slot is still technically occupied. should be changed
+                // add item to inventory on click
+                InventorySystem.Instance.Add(transform.GetChild(0).GetComponent<ShopItemUI>().itemData);
+
+                print($"Purchased {transform.GetChild(0).GetComponent<ShopItemUI>().itemData.itemName} for {transform.GetChild(0).GetComponent<ShopItemUI>().itemCost}!");
+            }
         }
+
+        // update how many coins are in inventory after all is said and done
+        CheckInventory();
+        itemWasPurchased = false;
     }
 }
