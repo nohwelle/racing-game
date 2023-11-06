@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
-    Button button;
-
     public GameObject itemObject;
     public bool hasItemDroppedInto; // a check for if the itemUI object was actually placed in a slot or dropped
     public bool isSelected;
@@ -52,16 +50,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         draggableItem.parentAfterDrag = transform;
     }
 
-    private void Awake()
-    {
-        button = GetComponent<Button>();
-    }
-
-    private void Start()
-    {
-        button.onClick.AddListener(SelectSlot);
-    }
-
     private void Update()
     {
         if (transform.childCount == 0)
@@ -79,11 +67,5 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         {
             itemObject = transform.GetChild(0).gameObject;
         }
-    }
-
-    void SelectSlot()
-    {
-        // used for selecting an item from inventory to use/hold
-
     }
 }
