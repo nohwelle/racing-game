@@ -178,7 +178,7 @@ public class CTFAIMovement : MonoBehaviour
     void GroundCheck()
     {
         // detect if a groundLayer object is within the 0.1 unit gap between the player's collider size and groundCheck's position
-        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * transform.localScale, 0, groundLayer))
+        if (Physics2D.OverlapBox(groundCheck.position + (Vector3)(playerCollider.offset * transform.localScale), playerCollider.size * groundCheck.localScale * transform.localScale, 0, groundLayer))
         {
             isGrounded = true;
         }

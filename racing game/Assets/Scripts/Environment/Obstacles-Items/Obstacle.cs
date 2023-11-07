@@ -17,6 +17,8 @@ public class Obstacle : MonoBehaviour
             collision.gameObject.GetComponent<Racer>().isInHitStun = true;
         }
 
+
+        // -- TO DO: make obstacles knock back CTFRunners based on direction they're facing; if facing right, hit left & vice versa
         if (collision.gameObject.GetComponent<CTFRunner>() && hitStunDuration > 0)
         {
             collision.gameObject.GetComponent<Rigidbody2D>().AddForce(knockbackForce, ForceMode2D.Impulse);

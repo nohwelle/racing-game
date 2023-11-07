@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 5011015393093048012}
   - component: {fileID: 3857270076497172091}
   m_Layer: 0
-  m_Name: Upwards Spike Piston
+  m_Name: Spike Piston
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,7 +108,7 @@ Transform:
   m_GameObject: {fileID: 7414334572260511928}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.375, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -373,5 +373,7 @@ MonoBehaviour:
   extensionSpeed: {x: 0, y: 0.05}
   retractionSpeed: {x: 0, y: -2}
   retractionDelay: 0.75
+  extensionDistanceLimit: 0
+  zRotation: 90
   isExtending: 0
   isRetracting: 0

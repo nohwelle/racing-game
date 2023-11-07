@@ -52,6 +52,7 @@ public class Laser : MonoBehaviour
         // shoot da ting
         hasFired = true;
 
+        // -- TO DO: figure out what laser should do if beam collides with a player at any point
         RaycastHit2D hit = Physics2D.Raycast(transform.position, firingDirection, Mathf.Infinity, ~3);
 
         if (!hasHit && hit.collider)
@@ -86,6 +87,8 @@ public class Laser : MonoBehaviour
 
         laserCollider.size = new(0.1f, 0.1f);
         laserCollider.offset = new(0, 0);
+
+        // -- TO DO: create laser charge-up effect to show players when laser will fire
 
         yield return new WaitForSeconds(firingCooldown);
 

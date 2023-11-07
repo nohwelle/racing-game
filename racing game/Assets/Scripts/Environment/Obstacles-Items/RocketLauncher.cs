@@ -17,7 +17,7 @@ public class RocketLauncher : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Racer>())
+        if (collision.gameObject.GetComponent<Racer>() || collision.gameObject.GetComponent<CTFRunner>())
         {
             Vector3 target = collision.gameObject.transform.position;
             target -= gunBarrel.transform.position;
@@ -36,7 +36,7 @@ public class RocketLauncher : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Racer>())
+        if (collision.gameObject.GetComponent<Racer>() || collision.gameObject.GetComponent<CTFRunner>())
         {
             gunBarrel.transform.rotation = Quaternion.Lerp(gunBarrel.transform.rotation, Quaternion.identity, gunBarrelAimSpeed * Time.deltaTime);
         }

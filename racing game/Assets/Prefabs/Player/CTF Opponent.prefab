@@ -223,8 +223,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade069ebba10f2a41a5515f4045f8e8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamIdentity: 0
   isInHitStun: 0
   hitStunDuration: 0
+  hitRecoveryDuration: 2
 --- !u!114 &8429900597367029634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +264,7 @@ MonoBehaviour:
   crouchOffset: {x: 0, y: -0.075}
   slideSize: {x: 0.2, y: -0.375}
   slideOffset: {x: 0, y: -0.18}
+  isFacingLeft: 0
   horizontalInputSmoothing: 0.01625
   isStuckUnderSomething: 0
   isGrounded: 0
@@ -273,6 +276,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &6499251131305966202
 GameObject:
   m_ObjectHideFlags: 0
