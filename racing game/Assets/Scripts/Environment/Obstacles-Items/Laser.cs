@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Laser : MonoBehaviour
@@ -11,6 +12,7 @@ public class Laser : MonoBehaviour
     public BoxCollider2D laserTrigger;
 
     public Vector2 firingDirection;
+    public float laserBeamMaxLength;
 
     public float firingDuration;
     public float firingCooldown;
@@ -19,18 +21,30 @@ public class Laser : MonoBehaviour
 
     public bool isFiring;
     bool hasFired = true;
-    bool hasHit;
     bool hasSetTrigger;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()
     {
+        // rotato ... bananba
+        if (transform.eulerAngles.z == 0) // firing upwards
+        {
+            firingDirection = new(0, 1);
+        }
+        if (transform.eulerAngles.z == 90) // firing to the left
+        {
+            firingDirection = new(-1, 0);
+        }
+        if (transform.eulerAngles.z == 180) // firing downwards
+        {
+            firingDirection = new(0, -1);
+        }
+        if (transform.eulerAngles.z == 270) // firing to the right
+        {
+            firingDirection = new(1, 0);
+        }
+
+        // handle laser firing
         if (isFiring && !hasFired)
         {
             StartCoroutine(StartFiring());
@@ -55,10 +69,29 @@ public class Laser : MonoBehaviour
         // -- TO DO: figure out what laser should do if beam collides with a player at any point
         RaycastHit2D hit = Physics2D.Raycast(transform.position, firingDirection, Mathf.Infinity, ~3);
 
-        if (!hasHit && hit.collider)
+        if (hit.collider)
         {
             laserEndPoint.position = hit.point;
-            hasHit = true;
+        }
+        
+        if (!hit.collider || new Vector2(Mathf.Abs(hit.point.x - transform.position.x), Mathf.Abs(hit.point.y - transform.position.y)).magnitude > laserBeamMaxLength)
+        {
+            if (transform.eulerAngles.z == 0)
+            {
+                laserEndPoint.position = new(laserEndPoint.position.x, transform.position.y + laserBeamMaxLength);
+            }
+            if (transform.eulerAngles.z == 90)
+            {
+                laserEndPoint.position = new(transform.position.x - laserBeamMaxLength, laserEndPoint.position.y);
+            }
+            if (transform.eulerAngles.z == 180)
+            {
+                laserEndPoint.position = new(laserEndPoint.position.x, transform.position.y - laserBeamMaxLength);
+            }
+            if (transform.eulerAngles.z == 270)
+            {
+                laserEndPoint.position = new(transform.position.x + laserBeamMaxLength, laserEndPoint.position.y);
+            }
         }
 
         laserBeam.SetPosition(0, transform.position);
@@ -92,7 +125,6 @@ public class Laser : MonoBehaviour
 
         yield return new WaitForSeconds(firingCooldown);
 
-        hasHit = false;
         isFiring = true;
 
         yield break;
@@ -106,7 +138,6 @@ public class Laser : MonoBehaviour
 
         yield return new WaitForSeconds(firingDuration / 2);
 
-        // i'll be honest, not entirely sure why this works but i'll take it
         RaycastHit2D hit = Physics2D.Raycast(transform.position, firingDirection, Mathf.Infinity, ~3);
 
         laserEndPoint.position = hit.point;
